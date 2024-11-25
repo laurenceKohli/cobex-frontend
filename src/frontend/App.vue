@@ -36,7 +36,7 @@ import TheProfile from './components/TheProfile.vue';
 </script>
 
 <template>
-    <main>
+  <main>
         <component :is="currentView" />
   </main>
   <TheNavBar :routes="routes" :currentPath="currentPath" />
