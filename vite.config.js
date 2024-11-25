@@ -1,15 +1,13 @@
 import { defineConfig } from 'vite';
 import path from 'path';
 import vue from '@vitejs/plugin-vue';
-import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 
 export default defineConfig(({ command, mode }) => {
 
   const config = {
     base: '/',
     plugins: [
-      vue({template: { transformAssetUrls }}),
-      quasar(),
+      vue()
     ],
     server: {
       proxy : {

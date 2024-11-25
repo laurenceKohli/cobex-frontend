@@ -1,0 +1,25 @@
+:root {
+    /* Colors */
+    --color-primary: #efa00f;
+    --color-secondary: #2e9ca0;
+    --color-tertiary: #21616a;
+    --color-quaternary: #533946;
+    --color-accent: #efa00f;
+    
+    --background-color: #0f2c33;
+
+    /* Fonts */
+    --text-color: #e6d1b4;
+
+    /* spacing and borders*/
+    --border-radius: 5px;
+    --border-width-small : 1px;
+    --border-width-medium : 3px;
+
+    --spacing-small : 5px;
+    --spacing-medium : 10px;
+    --spacing-large : 20px;
+
+    /*Animations*/
+    --default-transition: 300ms ease-in-out;
+}
