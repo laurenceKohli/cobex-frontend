@@ -11,11 +11,10 @@ export default defineConfig(({ command, mode }) => {
     ],
     server: {
       proxy : {
-        '/api/chat/': {
-          target: 'https://chabloz.eu/api/chat/',
+        '/api': {
+          target: 'https://cobex-uu6t.onrender.com',
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/api\/chat/, '')
-        }
+        },
       },
     },
     resolve: {
