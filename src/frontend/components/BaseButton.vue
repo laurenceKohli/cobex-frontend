@@ -13,7 +13,7 @@
 <template>
     <button :type="type">
         <span class="material-symbols-rounded"> {{ icon }} </span>
-        <slot/>
+        <slot></slot>
     </button>
 </template>
 
