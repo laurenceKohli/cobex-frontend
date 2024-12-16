@@ -17,5 +17,7 @@ const emit = defineEmits(['handle-point'])
 </template>
 
 <style scoped>
-
+ div{
+    border: 2px solid var(--color-primary);
+ }
 </style>
