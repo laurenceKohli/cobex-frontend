@@ -20,6 +20,9 @@ const displayCity = (ville) => {
         <BaseButton @click="displayCity('stMaurice')">
             St-Maurice
         </BaseButton>
+        <BaseButton @click="displayCity('yverdon')">
+            Yverdon
+        </BaseButton>
     </div>
     </div>
     <BaseInputLabel>Search</BaseInputLabel>

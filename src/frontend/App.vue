@@ -23,6 +23,10 @@ import TheTrail from './components/TheTrail.vue';
       component: TheCity,
       label: 'St-Maurice',
     },
+    '#yverdon': {
+      component: TheCity,
+      label: 'Yverdon',
+    },
     '#profile': {
       component: TheProfile,
       label: 'Profil',

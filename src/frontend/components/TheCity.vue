@@ -2,6 +2,7 @@
  import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
 import { ref, watch } from 'vue';
+import { currentTrail } from '../store/utils';
 
  const ville = window.location.href.split('#')[1];
 
@@ -11,8 +12,8 @@ import { ref, watch } from 'vue';
  let link = ref([]);
 
  switch(ville){
-     case 'bex':
-        nomVille = 'Bex';
+     case 'yverdon':
+        nomVille = 'Yverdon';
         break;
      default:
         console.log('default');
@@ -23,6 +24,7 @@ import { ref, watch } from 'vue';
  //si link change alors on va sur la page du parcours
     watch(link, (newValue) => {
         console.log(newValue);
+        currentTrail.value = newValue;
         window.location.href = `#parcours-detail`;
     });
 </script>
@@ -32,7 +34,7 @@ import { ref, watch } from 'vue';
         <h1>{{ nomVille }}</h1>
         <p>There are many cities in the world, but this one is mine.</p>
     </div>
-    <div v-if="ville=='bex'" class="trailsList">
+    <div v-if="ville=='yverdon'" class="trailsList">
         <template v-for="parcours in data">
                 <BaseCard
                     :info="parcours"
