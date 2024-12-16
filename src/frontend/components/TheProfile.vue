@@ -77,5 +77,7 @@
 </template>
 
 <style scoped>
-  
+  a:hover {
+    text-decoration: underline;
+  }
 </style>
