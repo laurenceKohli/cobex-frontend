@@ -3,16 +3,13 @@
 const props = defineProps({
     info: Object,
 })
-
-const emit = defineEmits(['handle-point'])
 </script>
 
 <template>
-    <div
-        class="card cursor-pointer"
-        @click="emit('handle-point', { point: info })"
-    >
+    <div>
         <p>{{ info.nom }}</p>
+        <p>{{ info.difficulte }}</p>
+        <p>{{ info.nbr_posts }}</p>
     </div>
 </template>
 
