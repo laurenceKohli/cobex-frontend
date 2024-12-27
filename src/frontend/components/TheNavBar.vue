@@ -27,8 +27,8 @@ onMounted(() => {
 
 <template>
     <nav>
-        <BaseNavLink icon="home" href="/">Accueil</BaseNavLink>
-        <BaseNavLink icon="account_circle" href="/#profile">Profil</BaseNavLink>
+        <BaseNavLink icon="home" href="#home">Accueil</BaseNavLink>
+        <BaseNavLink icon="account_circle" href="#profile">Profile</BaseNavLink>
     </nav>
 </template>
 
