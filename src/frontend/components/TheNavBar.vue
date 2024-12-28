@@ -40,33 +40,9 @@ nav {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: aqua;
+    background-color: var(--color-secondary);
     padding: 1rem 0rem;
 
     z-index: 1000;
-}
-
-a {
-    color:var(--text-color);
-
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-
-    width: 100%;
-}
-
-span {
-    display: flex;
-    align-self: center;
-    justify-content: center;
-
-    width: 60%;
-    margin-bottom: 0.1rem;
-    padding: 0.2rem;
-
-    border: none;
-    border-radius: 1.2rem;
 }
 </style>

@@ -20,10 +20,28 @@ const props = defineProps({
 
 <style scoped>
     a {
-        color: inherit;
-        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
     }
-    a:hover {
-        text-decoration: underline;
-    }
+
+    span {
+        display: flex;
+        align-self: center;
+        justify-content: center;
+
+        width: 60%;
+        margin-bottom: 0.1rem;
+        padding: 0.2rem;
+
+        border: none;
+        border-radius: 1.2rem;
+}
+
+span.active {
+    background-color: var(--color-primary);
+}
 </style>

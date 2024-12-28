@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { currentTrail } from '../store/utils';
+import { currentTrail } from '../stores/utils';
 
 const props = defineProps({
     info: Object,

@@ -2,9 +2,10 @@
  import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
 import { ref, watch } from 'vue';
-import { currentTrail } from '../store/utils';
+import { currentTrail } from '../stores/utils';
 
  const ville = window.location.href.split('#')[1];
+ const villeCapitalized = ville.charAt(0).toUpperCase() + ville.slice(1);
 
  const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
  const {data, error, loading} = parcoursCrud.readAll();
@@ -13,10 +14,10 @@ import { currentTrail } from '../store/utils';
 
  switch(ville){
      case 'yverdon':
-        nomVille = 'Yverdon';
+        nomVille = villeCapitalized;
         break;
      default:
-        console.log('default');
+        nomVille = villeCapitalized;
         break;
  }
  console.log(ville);
