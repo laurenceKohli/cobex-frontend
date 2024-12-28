@@ -36,9 +36,6 @@ const props = defineProps({
         width: 60%;
         margin-bottom: 0.1rem;
         padding: 0.2rem;
-
-        border: none;
-        border-radius: 1.2rem;
 }
 
 span.active {
