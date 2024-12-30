@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps, ref } from 'vue';
 import BaseNavLink from './BaseNavLink.vue';
 import { depart, timerValue } from '../stores/courseActuelle'
 
@@ -13,7 +12,6 @@ const props = defineProps({
         default: 0,
     }
 });
-console.log(props.nbParcouru, props.nbTotal);
 
 </script>
 
