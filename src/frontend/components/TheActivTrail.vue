@@ -4,7 +4,12 @@ import BaseMap from './BaseMap.vue';
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { currentTrail, endTimer } from '../stores/utils';
 import { depart, nbPostesParcourus, stopTimer } from '../stores/courseActuelle';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
+import BaseButton from './BaseButton.vue';
+
+import readQR from '../composables/readQR';
+import { useUserMedia } from '../composables/useUserMedia';
+import { useUserPosition } from '../composables/useUserPosition';
 
     const id = currentTrail.value;
     // const id = "676d6993c86c62d76b583a84"
@@ -19,8 +24,6 @@ import { computed } from 'vue';
 
     
 //temporaire
-import BaseButton from './BaseButton.vue';
-
 const scan = () => {
     if (!depart.value) {
         depart.value = true;
@@ -32,6 +35,32 @@ const scan = () => {
     }
 }
 
+const { startup, isVideoActive, toggleCamera } = useUserMedia();
+// const { getSwissPosition, position, error } = useUserPosition();
+
+const buttonText = computed(() => {
+    console.log(isVideoActive.value);
+  return isVideoActive.value ? 'Prendre une photo' : 'Démarrer la caméra';
+});
+
+const handleClick = () => {
+    console.log('click');
+  const imageData = toggleCamera();
+ 
+  if (imageData) {
+    const qrResult = readQR(imageData);
+    scan();
+    // getSwissPosition();
+    // console.log(position.value.x + " " + position.value.y);
+    document.getElementById("monImage").innerHTML = qrResult;
+  }
+};
+
+
+onMounted(() => {
+  startup();
+});
+
 </script>
 
 <template>
@@ -39,9 +68,18 @@ const scan = () => {
         <p>{{ data.nom }}</p>
     </div>
 
-    <BaseButton icon="photo_camera" @click="scan">
-        Scan
+    <div class="camera">
+  <video id="video">Le flux vidéo n'est pas disponible.</video>
+  <BaseButton icon="photo_camera" @click="handleClick">
+        {{ buttonText }}
     </BaseButton>
+</div>
+<canvas id="canvas"></canvas>
+<!-- <div class="output">
+  <img id="photo" alt="L'image capturée sera affichée dans cette boîte." />
+</div> -->
+<p id="monImage"></p>
+
 
     <template v-if="depart && nbPostesParcourus < nombreDePostes">
         <BaseMap :points="data.postesInclus" :draggable="true" :width=400 :height=500 />
@@ -61,5 +99,11 @@ const scan = () => {
 </template>
 
 <style scoped>
+video {
+    display: none;
+}
 
+video.active {
+    display: block;
+}
 </style>

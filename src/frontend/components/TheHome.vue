@@ -4,14 +4,15 @@ import BaseInputLabel from './BaseInputLabel.vue';
 import BaseInput from './BaseInput.vue';
 
 import readQR from '../composables/readQR';
-import { useUserMedia, useUserPosition } from '../composables/useUserMedia';
+import { useUserMedia } from '../composables/useUserMedia';
+// import { useUserPosition } from '../composables/useUserPosition';
 import { onMounted, computed } from 'vue';
 
 const displayCity = (ville) => {
     window.location.href='#'+ville;
 }
 
-const { startup, toggleCamera, isVideoActive } = useUserMedia();
+const { startup, isVideoActive, toggleCamera } = useUserMedia();
 // const { getSwissPosition, position, error } = useUserPosition();
 
 const buttonText = computed(() => {
@@ -20,6 +21,7 @@ const buttonText = computed(() => {
 });
 
 const handleClick = () => {
+    console.log('click');
   const imageData = toggleCamera();
  
   if (imageData) {
@@ -29,6 +31,7 @@ const handleClick = () => {
     document.getElementById("monImage").innerHTML = qrResult;
   }
 };
+
 
 onMounted(() => {
   startup();
@@ -40,7 +43,7 @@ onMounted(() => {
 
     <div class="camera">
   <video id="video">Le flux vidéo n'est pas disponible.</video>
-  <button @click="handleClick">{{ buttonText }}</button>
+  <button @click="handleClick" id="startbutton">{{ buttonText }}</button>
 </div>
 <canvas id="canvas"></canvas>
 <div class="output">
