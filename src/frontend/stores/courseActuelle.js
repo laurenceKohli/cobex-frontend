@@ -1,8 +1,11 @@
 import { ref, watch } from 'vue'
-import { endTimer } from './utils'
+import { currentTrail } from './utils'
+import { useFetchApiCrud } from '../composables/useFetchApiCrud'
+import { username } from './user'
 
 export const depart = ref(false)
 export const nbPostesParcourus = ref(0)
+export const endTimer = ref(3)
 
 
 /**
@@ -18,7 +21,7 @@ export const nbPostesParcourus = ref(0)
  * Le timer démarre automatiquement lorsque la course démarre et s'arrête lorsque la course est terminée.
  */
 export const isTimerRunning = ref(false)
-export const timerValue = ref('00:00:00')
+export const timerValue = ref('01:00:00')
 let timerInterval
 
 watch(depart, (newValue) => {
@@ -41,9 +44,32 @@ function startTimer() {
   }, 1000)
 }
 
+const resultatCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
+
+function convertTimeToSeconds(time) {
+  const [h, m, s] = time.split(':')
+  return parseInt(h) * 3600 + parseInt(m) * 60 + parseInt(s)
+}
+
+function saveResult() {
+  console.log('Enregistrement du résultat');
+  console.log(username.value);
+  const formData = {temps: endTimer.value, trailID: currentTrail.value}; 
+  console.log('Donnees :', formData);
+  const {data, error} = resultatCrud.create(formData);
+  watch(data, () => {
+    console.log('Resultat enregistré');
+    console.log(data.value);
+  });
+  watch(error, () => {
+    console.error('Error while creating resultat', error.value);
+  });
+}
+
 export function stopTimer() {
   isTimerRunning.value = false
-  endTimer.value = timerValue.value
+  endTimer.value = convertTimeToSeconds(timerValue.value)
+  saveResult()
   timerValue.value = '00:00:00'
   clearInterval(timerInterval)
 }

@@ -2,8 +2,8 @@
 import AppNavTrail from './AppNavTrail.vue';
 import BaseMap from './BaseMap.vue';
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
-import { currentTrail, endTimer } from '../stores/utils';
-import { depart, nbPostesParcourus, stopTimer } from '../stores/courseActuelle';
+import { currentTrail } from '../stores/utils';
+import { depart, nbPostesParcourus, stopTimer, endTimer } from '../stores/courseActuelle';
 import { computed, onMounted } from 'vue';
 import BaseButton from './BaseButton.vue';
 
