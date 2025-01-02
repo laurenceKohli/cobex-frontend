@@ -22,6 +22,8 @@
     --spacing-medium : 10px;
     --spacing-large : 20px;
 
+    --gap : 5px;
+
     /*Animations*/
     --default-transition: 300ms ease-in-out;
 }
