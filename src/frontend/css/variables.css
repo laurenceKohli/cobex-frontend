@@ -8,8 +8,10 @@
     
     --background-color: #fff;
 
-    /* Fonts */
     --text-color: #e6d1b4;
+    --color-error: #ff0000;
+    
+    /* Fonts */
 
     /* spacing and borders*/
     --border-radius: 5px;

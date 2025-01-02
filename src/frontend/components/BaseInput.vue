@@ -22,5 +22,9 @@ defineExpose({ focus: () => input.value.focus() })
 </template>
 
 <style scoped>
-
+input {
+    border: var(--border-width-small) solid var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+}
 </style>

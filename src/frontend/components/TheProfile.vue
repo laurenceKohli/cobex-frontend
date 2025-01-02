@@ -1,9 +1,13 @@
 <script setup>
   import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
   import { ref, watch } from 'vue';
-  import { isAuth } from '../stores/user';
-  import { username } from '../stores/user';
+  import { isAuth, username } from '../stores/user';
   import { setDefaultHeaders } from '../composables/useFetchApi';
+
+  import BaseInput from './BaseInput.vue';
+  import BaseInputLabel from './BaseInputLabel.vue';
+  import BaseInputError from './BaseInputError.vue';
+  import BaseButton from './BaseButton.vue';
 
   const peopleCrud = useFetchApiCrud('utilisateurs', import.meta.env.VITE_API_URL);
 
@@ -72,38 +76,65 @@
   <p v-if="isAuth">Bonjour {{ username }}</p>
 
   <form v-else-if="create" @submit="submitCreate" method="post">
-    <label for="name">Nom</label>
-    <input type="text" name="nom" id="name" v-model="name"/>
-    <em v-if="usernameExists">ce nom de compte est déjà utilisé</em>
-    <br>
-    <label for="email">Mail</label>
-    <input type="email" name="mail" id="email" v-model="email"/>
-    <em v-if="invalidEmail">veuillez entrer un email valide</em>
-    <em v-if="emailExists">cet email est déjà utilisé</em>
-    <br>
-    <label for="password">Mot de passe</label>
-    <input type="text" name="mdp" id="password" v-model="password"/>
-    <br>
-    <button type="submit">Créer un compte</button>
-    <br>
-    <a @click="toggleCreate">J'ai déjà un compte</a>
+    <div>
+      <div class="input">
+        <BaseInputLabel for="name">Nom</BaseInputLabel>
+        <BaseInput type="text" name="nom" id="name" v-model="name"/>
+      </div>
+      <BaseInputError v-if="usernameExists" message="ce nom de compte est déjà utilisé"/>
+    </div>
+    <div>
+      <div class="input">
+        <BaseInputLabel for="email">Mail</BaseInputLabel>
+        <BaseInput type="email" name="mail" id="email" v-model="email"/>
+      </div>
+        <BaseInputError v-if="invalidEmail" message="veuillez entrer un email valide"/>
+        <BaseInputError v-if="emailExists" message="cet email est déjà utilisé"/>
+      </div>
+    <div class="input">
+      <BaseInputLabel for="password">Mot de passe</BaseInputLabel>
+      <BaseInput type="text" name="mdp" id="password" v-model="password"/>
+    </div>
+    <div class="choix">
+      <BaseButton type="submit">Créer un compte</BaseButton>
+      <a @click="toggleCreate">J'ai déjà un compte</a>
+    </div>
   </form>
   
   <form v-else @submit="submitLogin" method="post">
-    <label for="name">Nom</label>
-    <input type="text" name="nom" id="name" v-model="name"/>
-    <br>
-    <label for="password">Mot de passe</label>
-    <input type="text" name="mdp" id="password" v-model="password"/>
-    <br>
-    <button type="submit">Se connecter</button>
-    <br>
-    <a @click="toggleCreate">Je n'ai pas de compte</a>
+    <div class="input">
+      <BaseInputLabel for="name">Nom</BaseInputLabel>
+      <BaseInput type="text" name="nom" id="name" v-model="name"/>
+    </div>
+    <div class="input">
+      <BaseInputLabel for="password">Mot de passe</BaseInputLabel>
+      <BaseInput type="text" name="mdp" id="password" v-model="password"/>
+    </div>
+    <div class="choix">
+      <BaseButton type="submit">Se connecter</BaseButton>
+      <a @click="toggleCreate">Je n'ai pas de compte</a>
+    </div>
   </form>
 </template>
 
 <style scoped>
   a:hover {
     text-decoration: underline;
+  }
+
+  form>div {
+    margin-bottom: var(--spacing-large);
+  }
+
+  div.input{
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
+  }
+
+  .choix {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-medium);
   }
 </style>
