@@ -3,9 +3,11 @@
   import { ref, watch } from 'vue';
   import { isAuth } from '../stores/user';
   import { username } from '../stores/user';
+  import { resultats } from '../stores/resultats';
   import { setDefaultHeaders } from '../composables/useFetchApi';
 
   const peopleCrud = useFetchApiCrud('utilisateurs', import.meta.env.VITE_API_URL);
+  const resultatsCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
 
   const create = ref(false);
   const name = ref('');
@@ -35,7 +37,10 @@
       }
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
-      username.value = name.value;
+      username.value = data.value.savedPerson.nom;
+      // fetchApi({url: `/resutats?utilisateur=${data.value.savedPerson.id}`}).then((response) => {
+      //   resultats.value = response.data;
+      // });
     });
     watch(error, () => {
       console.error('Error while creating account', error.value);
@@ -61,6 +66,9 @@
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
       username.value = name.value;
+      resultatsCrud.fetchApi({url: `/resultats?utilisateur=${data.value.utilisateur.id}&include=parcours`}).then((response) => {
+        resultats.value = response;
+      });
     });
     watch(error, () => {
       console.error('Error while logging in', error.value);
@@ -69,7 +77,10 @@
 </script>
 
 <template>
-  <p v-if="isAuth">Bonjour {{ username }}</p>
+  <div v-if="isAuth">
+    <p>Bonjour {{ username }}</p>
+    <br>
+  </div>
 
   <form v-else-if="create" @submit="submitCreate" method="post">
     <label for="name">Nom</label>
