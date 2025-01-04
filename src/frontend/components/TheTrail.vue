@@ -2,6 +2,7 @@
     import AppTabList from './AppTabList.vue';
     import BaseMap from './BaseMap.vue';
     import BaseButton from './BaseButton.vue';
+    import BaseTag from './BaseTag.vue';
     import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
     import { currentTrail } from '../stores/utils';
     import { computed } from 'vue';
@@ -28,7 +29,7 @@
     <div v-if="loading">...</div>
     <div id="parcours" v-else>
         <h1>{{ data.nom }}</h1>
-        <p>{{ data.difficulte }}</p>
+        <BaseTag :tag="data.difficulte"></BaseTag>
         <p v-if="data.descr">{{ data.descr }}</p>
         <p>Nombre de postes : {{ nombreDePostes }}</p>
         <BaseButton @click="start">
