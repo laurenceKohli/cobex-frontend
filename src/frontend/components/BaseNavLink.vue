@@ -7,7 +7,7 @@ const props = defineProps({
     href: {
         type: String,
         default: '',
-    },
+    }
 })
 </script>
 
@@ -38,7 +38,7 @@ const props = defineProps({
         padding: 0.2rem;
 }
 
-span.active {
-    background-color: var(--color-primary);
+a.active, a.active span {
+    color: var(--color-primary);
 }
 </style>
