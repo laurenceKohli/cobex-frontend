@@ -1,22 +1,40 @@
 <script setup>
- import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
+import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
-import { ref, watch } from 'vue';
-import { currentTrail } from '../store/utils';
+import { compile, ref, watch } from 'vue';
+import { currentTrail } from '../stores/utils';
+import { difficultySort } from '../composables/difficultySort';
 
  const ville = window.location.href.split('#')[1];
+ const villeCapitalized = ville.charAt(0).toUpperCase() + ville.slice(1);
 
  const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
  const {data, error, loading} = parcoursCrud.readAll();
+ //stocker une copie des données pour pouvoir annuler le tri
+ //let dataCopy = [...data];
  let nomVille = '';
  let link = ref([]);
+ let sorted = false;
+
+const toggleSortDifficulty = () => {
+    if(!sorted || sorted === "desc"){
+        data.value.sort(DifficultySort);
+        sorted = "asc";
+    } else if(sorted === "asc") {
+        data.value.sort(DifficultySort).reverse();
+        sorted = "desc";
+    
+    } /*else {
+        sorted = false;
+    }*/
+}
 
  switch(ville){
      case 'yverdon':
-        nomVille = 'Yverdon';
+        nomVille = villeCapitalized;
         break;
      default:
-        console.log('default');
+        nomVille = villeCapitalized;
         break;
  }
  console.log(ville);
@@ -35,6 +53,7 @@ import { currentTrail } from '../store/utils';
         <p>There are many cities in the world, but this one is mine.</p>
     </div>
     <div v-if="ville=='yverdon'" class="trailsList">
+        <p class="sorter" @click="toggleSortDifficulty">sort me</p>
         <template v-for="parcours in data">
                 <BaseCard
                     :info="parcours"
