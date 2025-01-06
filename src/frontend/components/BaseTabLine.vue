@@ -23,6 +23,7 @@ watch(link, (newValue) => {
         <p class="numero" v-if="numero">{{ numero }}</p>
         <p class="nom" v-if="info.nom" @click="link = info._id">{{ info.nom }}</p>
         <p class="nom" v-if="info.user">{{ info.user }}</p>
+        <p class="nom" v-if="info.parcours.nom">{{ info.parcours.nom }}</p>
         <p class="temps" v-if="info.temps">{{ info.temps }}</p>
     </div>
 </template>

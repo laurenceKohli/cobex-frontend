@@ -2,16 +2,17 @@
   import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
   import { ref, watch } from 'vue';
   import { resultats } from '../stores/resultats';
-  import { isAuth, username } from '../stores/user';
+  import { isAuth, username, userId } from '../stores/user';
   import { setDefaultHeaders } from '../composables/useFetchApi';
 
+  import AppTabList from './AppTabList.vue';
   import BaseInput from './BaseInput.vue';
   import BaseInputLabel from './BaseInputLabel.vue';
   import BaseInputError from './BaseInputError.vue';
   import BaseButton from './BaseButton.vue';
 
   const peopleCrud = useFetchApiCrud('utilisateurs', import.meta.env.VITE_API_URL);
-  const resultatsCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
+  const resultCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
 
   const create = ref(false);
   const name = ref('');
@@ -20,6 +21,19 @@
   const usernameExists = ref(false);
   const invalidEmail = ref(false);
   const emailExists = ref(false);
+
+  const resultData = ref([]);
+
+  function fetchResults() {
+    const {data, error} = resultCrud.fetchApiToRef({url: `resultats?utilisateurs=${userId.value}&include=parcours`, method: 'GET'});
+    watch(data, () => {
+      resultData.value = data.value;
+      console.log(resultData.value);
+    });
+    watch(error, () => {
+      console.error('Error while fetching results', error.value);
+    });
+  }
 
   function toggleCreate() {
     create.value = !create.value;
@@ -41,10 +55,8 @@
       }
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
-      username.value = data.value.savedPerson.nom;
-      // fetchApi({url: `/resutats?utilisateur=${data.value.savedPerson.id}`}).then((response) => {
-      //   resultats.value = response.data;
-      // });
+      username.value = data.value.utilisateur.nom;
+      userId.value = data.value.utilisateur.id;
     });
     watch(error, () => {
       console.error('Error while creating account', error.value);
@@ -67,12 +79,11 @@
         console.error('No token in response');
         return;
       }
+      fetchResults();
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
-      username.value = name.value;
-      resultatsCrud.fetchApi({url: `/resultats?utilisateur=${data.value.utilisateur.id}&include=parcours`}).then((response) => {
-        resultats.value = response;
-      });
+      username.value = data.value.utilisateur.nom;
+      userId.value = data.value.utilisateur.id;
     });
     watch(error, () => {
       console.error('Error while logging in', error.value);
@@ -83,7 +94,10 @@
 <template>
   <div v-if="isAuth">
     <p>Bonjour {{ username }}</p>
-    <br>
+    <h2>Résultats effectués</h2>
+    <template v-if="resultData.length > 0">
+      <AppTabList :tab="resultData"></AppTabList>
+    </template>
   </div>
 
   <form v-else-if="create" @submit="submitCreate" method="post">
