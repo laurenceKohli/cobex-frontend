@@ -1,27 +1,16 @@
 <script setup>
 import BaseNavLink from './BaseNavLink.vue';
-import { depart, timerValue } from '../stores/courseActuelle'
-
-const props = defineProps({
-    nbParcouru: {
-        type: Number,
-        default: 0,
-    },
-    nbTotal: {
-        type: Number,
-        default: 0,
-    }
-});
+import { depart, timerValue, nbPostesParcourus, nbPostesTotal } from '../stores/courseActuelle'
 
 </script>
 
 <template>
      <div class="nav">
-        <template v-if="depart && nbParcouru < nbTotal">
-            <p>{{ nbParcouru }} / {{ nbTotal }}</p>
+        <template v-if="depart && nbPostesParcourus < nbPostesTotal">
+            <p>{{ nbPostesParcourus }} / {{ nbPostesTotal }}</p>
             <p>{{ timerValue }}</p>
         </template>
-        <template v-else-if="depart && nbParcouru === nbTotal">
+        <template v-else-if="depart && nbPostesParcourus === nbPostesTotal">
             <p>Scannez l'arrivée</p>
             <p>{{ timerValue }}</p>
         </template>

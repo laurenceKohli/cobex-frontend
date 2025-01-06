@@ -3,56 +3,38 @@ import AppNavTrail from './AppNavTrail.vue';
 import BaseMap from './BaseMap.vue';
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { currentTrail } from '../stores/utils';
-import { depart, nbPostesParcourus, stopTimer, endTimer } from '../stores/courseActuelle';
+import { depart, nbPostesParcourus, nbPostesTotal } from '../stores/courseActuelle';
 import { computed, onMounted } from 'vue';
 import BaseButton from './BaseButton.vue';
 
-import readQR from '../composables/readQR';
-import { useUserMedia } from '../composables/useUserMedia';
-import { useUserPosition } from '../composables/useUserPosition';
+import { startup, isVideoActive, toggleCamera } from '../composables/useUserMedia';
+import { getPosition, position } from '../composables/useUserPosition';
+import { analyseQRCode } from '../composables/userActionsTrail';
 
     const id = currentTrail.value;
-    // const id = "676d6993c86c62d76b583a84"
+    // const id = "6774236a931a70b7bf27a3ba"
     console.log(id);
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
     const {data, error, loading} = parcoursCrud.read(id+'?include="postes"');
 
-    console.log(data. loading, error);
-    const nombreDePostes = computed(() => {
-        return data.value.postesInclus.length;
-    });
-
-    
-//temporaire
-const scan = () => {
-    if (!depart.value) {
-        depart.value = true;
-    } else if(nbPostesParcourus.value < nombreDePostes.value) {
-        nbPostesParcourus.value++;
-    } else {
-        stopTimer();
-        console.log(endTimer.value);
-    }
-}
-
-const { startup, isVideoActive, toggleCamera } = useUserMedia();
-// const { getSwissPosition, position, error } = useUserPosition();
+    console.log(data, error, loading);
+    //A CHANGER
+    nbPostesTotal.value = 2;
+    console.log(nbPostesTotal.value);
 
 const buttonText = computed(() => {
     console.log(isVideoActive.value);
   return isVideoActive.value ? 'Prendre une photo' : 'Démarrer la caméra';
 });
 
-const handleClick = () => {
+const handleClick = async () => {
     console.log('click');
   const imageData = toggleCamera();
  
   if (imageData) {
-    const qrResult = readQR(imageData);
-    scan();
-    // getSwissPosition();
-    // console.log(position.value.x + " " + position.value.y);
-    document.getElementById("monImage").innerHTML = qrResult;
+    await getPosition();
+    const msg = analyseQRCode(imageData, position.value);
+    document.getElementById("monImage").innerHTML = msg;
   }
 };
 
@@ -81,10 +63,10 @@ onMounted(() => {
 <p id="monImage"></p>
 
 
-    <template v-if="depart && nbPostesParcourus < nombreDePostes">
+    <template v-if="depart && nbPostesParcourus < nbPostesTotal">
         <BaseMap :points="data.postesInclus" :draggable="true" :width=400 :height=500 />
     </template>
-    <template v-else-if="nbPostesParcourus >= nombreDePostes">
+    <template v-else-if="nbPostesParcourus >= nbPostesTotal">
         <p>Bravo, vous avez terminé le parcours !</p>
         <p>Scannez vite le QR code de fin pour terminer la course</p>
 
@@ -92,10 +74,7 @@ onMounted(() => {
     <template v-else>
         <p>Scanner le QR code du départ pour démarrer la course</p>
     </template> 
-    <AppNavTrail
-            :nbParcouru="nbPostesParcourus"
-            :nbTotal="nombreDePostes"
-        />
+    <AppNavTrail/>
 </template>
 
 <style scoped>

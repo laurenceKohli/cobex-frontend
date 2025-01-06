@@ -5,7 +5,6 @@ const props = defineProps({
   tab: Object,
 });
 
-console.log(props.tab);
 </script>
 
 <template>

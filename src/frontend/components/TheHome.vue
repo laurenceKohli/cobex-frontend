@@ -4,7 +4,7 @@ import BaseInputLabel from './BaseInputLabel.vue';
 import BaseInput from './BaseInput.vue';
 
 import readQR from '../composables/readQR';
-import { useUserMedia } from '../composables/useUserMedia';
+import { startup, isVideoActive, toggleCamera } from '../composables/useUserMedia';
 // import { useUserPosition } from '../composables/useUserPosition';
 import { onMounted, computed } from 'vue';
 
@@ -12,7 +12,6 @@ const displayCity = (ville) => {
     window.location.href='#'+ville;
 }
 
-const { startup, isVideoActive, toggleCamera } = useUserMedia();
 // const { getSwissPosition, position, error } = useUserPosition();
 
 const buttonText = computed(() => {

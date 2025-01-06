@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 
-export function useUserMedia() {
   const width = 320;
   const height = ref(0);
   const streaming = ref(false);
@@ -8,10 +7,10 @@ export function useUserMedia() {
   const video = ref(null);
   const canvas = ref(null);
 //   const photo = ref(null);
-  const isVideoActive = ref(false);
+export  const isVideoActive = ref(false);
   let videoStream = null;
 
-  function startup() {
+ export function startup() {
     video.value = document.getElementById("video");
     canvas.value = document.getElementById("canvas");
     // photo.value = document.getElementById("photo");
@@ -73,7 +72,7 @@ export function useUserMedia() {
     }
   }
 
-  function toggleCamera() {
+ export function toggleCamera() {
     if (isVideoActive.value) {
       const imageData = takepicture();
       return imageData;
@@ -82,16 +81,3 @@ export function useUserMedia() {
       return null;
     }
   }
-
-  return {
-    startup,
-    takepicture,
-    clearphoto,
-    width,
-    height,
-    isVideoActive,
-    startVideo,
-    stopVideo,
-    toggleCamera
-  };
-}

@@ -1,11 +1,11 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, useTemplateRef } from 'vue';
 import BasePoint from './BasePoint.vue';
 import { useFetchApiCrud } from '../composables/useFetchApiCrud';
 
 const postesCrud = useFetchApiCrud('postes', import.meta.env.VITE_API_URL);
 const scale = ref(1);
-const canvas = ref(null);
+const canvas = useTemplateRef('canvas');
 const ctx = ref(null);
 const image = new Image();
 
@@ -58,6 +58,23 @@ function handleMouseUp() {
     isDragging.value = false;
 }
 
+const postes = ref([]);
+for (const id of props.points) {
+    const { data, error, loading } = postesCrud.read(id);
+    watch(data, (newValue) => {
+        postes.value.push(newValue);
+        drawPoint(newValue);
+    });
+}
+
+function drawPoint(poste) {
+    if (!ctx.value) return;
+    const x = Math.abs(long1 - poste.geoloc.long);
+    const y = Math.abs(lat1 - poste.geoloc.lat);
+    ctx.value.fillStyle = "red";
+    ctx.value.fillRect(x, y, 10, 10);
+}
+
 function redrawCanvas() {
     if (!ctx.value) return;
 
@@ -68,14 +85,8 @@ function redrawCanvas() {
     ctx.value.drawImage(image, 0, 0);
 
     // Redessiner les points
-    for (const id of props.points) {
-        const { data, error, loading } = postesCrud.read(id);
-        watch(data, (newValue) => {
-            const x = (long1 - newValue.geoloc.long) / scale.value;
-            const y = (lat1 - newValue.geoloc.lat) / scale.value;
-            ctx.value.fillStyle = "red";
-            ctx.value.fillRect(x, y, 10, 10);
-        });
+    for (const poste of postes.value) {
+        drawPoint(poste);
     }
     ctx.value.restore();
 }
@@ -90,8 +101,9 @@ function zoomOut() {
     redrawCanvas();
 }
 
+
 onMounted(() => {
-    canvas.value = document.getElementById("mymap");
+    // canvas.value = document.getElementById("mymap");
     ctx.value = canvas.value.getContext("2d");
     canvas.value.width = props.width;
     canvas.value.height = props.height;
@@ -105,7 +117,7 @@ onMounted(() => {
 
 <template>
     <div id="map">
-        <canvas id="mymap" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
+        <canvas ref="canvas" id="mymap" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
             @mouseleave="handleMouseUp" :style="{ cursor: draggable ? 'grab' : 'default' }"></canvas>
         <div v-if="draggable" class="zoom-controls">
             <button @click="zoomIn" class="zoom-btn">+</button>

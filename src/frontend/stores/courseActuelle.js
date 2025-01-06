@@ -5,6 +5,7 @@ import { username } from './user'
 
 export const depart = ref(false)
 export const nbPostesParcourus = ref(0)
+export const nbPostesTotal = ref(0)
 export const endTimer = ref(3)
 
 
@@ -51,7 +52,7 @@ function convertTimeToSeconds(time) {
   return parseInt(h) * 3600 + parseInt(m) * 60 + parseInt(s)
 }
 
-function saveResult() {
+export function saveResult() {
   console.log('Enregistrement du résultat');
   console.log(username.value);
   const formData = {temps: endTimer.value, trailID: currentTrail.value}; 
@@ -69,7 +70,6 @@ function saveResult() {
 export function stopTimer() {
   isTimerRunning.value = false
   endTimer.value = convertTimeToSeconds(timerValue.value)
-  saveResult()
   timerValue.value = '00:00:00'
   clearInterval(timerInterval)
 }
