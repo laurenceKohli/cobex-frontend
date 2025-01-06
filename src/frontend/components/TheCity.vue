@@ -1,6 +1,7 @@
 <script setup>
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
+import BaseButton from './BaseButton.vue';
 import { compile, ref, watch } from 'vue';
 import { currentTrail } from '../stores/utils';
 import { difficultySort } from '../composables/difficultySort';
@@ -50,10 +51,11 @@ const toggleSortDifficulty = () => {
 <template>
     <div class="city">
         <h1>{{ nomVille }}</h1>
-        <p>There are many cities in the world, but this one is mine.</p>
     </div>
     <div v-if="ville=='yverdon'" class="trailsList">
-        <p class="sorter" @click="toggleSortDifficulty">sort me</p>
+        <BaseButton @click="toggleSortDifficulty" class="secondary">
+            Trier par difficulté
+        </BaseButton>
         <template v-for="parcours in data">
                 <BaseCard
                     :info="parcours"

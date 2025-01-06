@@ -19,4 +19,4 @@ const getLevel = (difficulte) => {
     }
 }
 
-export { DifficultySort };
+export { difficultySort };
