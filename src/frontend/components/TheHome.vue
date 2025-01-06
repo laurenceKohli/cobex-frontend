@@ -54,10 +54,10 @@ onMounted(() => {
     <div id="choixVille">
         <h2>Dans quelle ville voulez-vous faire votre course?</h2>
         <div id="choix">
-        <BaseButton @click="displayCity('bex')">
+        <BaseButton @click="displayCity('bex')" class="secondary">
             Bex
         </BaseButton>
-        <BaseButton @click="displayCity('stMaurice')">
+        <BaseButton @click="displayCity('stMaurice')" class="secondary">
             St-Maurice
         </BaseButton>
         <BaseButton @click="displayCity('yverdon')">

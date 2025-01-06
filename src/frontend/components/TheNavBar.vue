@@ -1,27 +1,32 @@
 <script setup>
 import BaseNavLink from './BaseNavLink.vue';
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 
-const addActiveClass = (path) => {
-    document
-        .querySelector(`nav a[href="/${path}"]`)
-        ?.querySelector('span')
-        ?.classList.add('active')
+const props = defineProps({
+  currentPath: {
+    type: String,
+    required: true
+  }
+});
+
+const updateActiveClass = (path) => {
+  // D'abord retirer la classe active de tous les liens
+  document.querySelectorAll('nav a').forEach(link => {
+    link.classList.remove('active');
+  });
+  
+  // Ajouter la classe active au lien correspondant au chemin actuel
+  document
+    .querySelector(`nav a[href="${path}"]`)
+    ?.classList.add('active');
 }
 
+watch(() => props.currentPath, (newPath) => {
+  updateActiveClass(newPath);
+});
+
 onMounted(() => {
-    const url = window.location.pathname.split('/')
-    if (url.some((el) => el === 'home') || url.every((el) => el === '')) {
-        addActiveClass('')
-    }
-    if (
-        url.some((el) => el === 'profile') ||
-        url.some((el) => el === 'about') ||
-        url.some((el) => el === 'register') ||
-        url.some((el) => el === 'login')
-    ) {
-        addActiveClass('profile')
-    }
+    updateActiveClass(props.currentPath);
 })
 </script>
 

@@ -50,5 +50,11 @@ import { currentTrail } from '../stores/utils';
 </template>
 
 <style scoped>
-
+div.trailsList {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-large);
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
 </style>

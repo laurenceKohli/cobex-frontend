@@ -7,11 +7,15 @@
         icon: {
             type: String,
         },
+        class: {
+            type: String,
+            default: '',
+        }
     })
 </script>
 
 <template>
-    <button :type="type">
+    <button :type="type" :class="class">
         <span class="material-symbols-outlined" v-if="icon"> {{ icon }} </span>
         <slot></slot>
     </button>
@@ -23,6 +27,31 @@
     align-items: center;
     height: 2.5rem;
     padding: 0 1rem;
-    gap: 0.5rem;
+    gap: var(--spacing-small);
+    background-color: var(--color-primary);
+    border-radius: var(--border-radius);
+    border: none;
  }
+
+    button:hover{
+        color: var(--color-secondary);
+    }
+
+    button:focus{
+        color: var(--color-secondary);
+    }
+
+.secondary{
+    border: var(--color-primary) solid var(--border-width-small);
+    background-color: transparent;
+}
+
+.cancel{
+    border: var(--color-error) solid var(--border-width-small);
+    background-color: transparent;
+}
+
+.delete{
+    background-color: var(--color-error);
+}
 </style>
