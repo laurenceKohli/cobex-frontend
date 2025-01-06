@@ -1,10 +1,11 @@
 <script setup>
   import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
   import { ref, watch } from 'vue';
-  import { isAuth, username, userId } from '../store/user';
+  import { resultats } from '../stores/resultats';
+  import { isAuth, username, userId } from '../stores/user';
   import { setDefaultHeaders } from '../composables/useFetchApi';
-  import AppTabList from './AppTabList.vue';
 
+  import AppTabList from './AppTabList.vue';
   import BaseInput from './BaseInput.vue';
   import BaseInputLabel from './BaseInputLabel.vue';
   import BaseInputError from './BaseInputError.vue';
@@ -93,7 +94,7 @@
 <template>
   <div v-if="isAuth">
     <p>Bonjour {{ username }}</p>
-    <p>résultats effectués</p>
+    <h2>Résultats effectués</h2>
     <template v-if="resultData.length > 0">
       <AppTabList :tab="resultData"></AppTabList>
     </template>

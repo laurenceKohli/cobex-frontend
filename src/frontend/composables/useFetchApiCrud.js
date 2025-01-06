@@ -18,7 +18,7 @@ import { useFetchApi } from "./useFetchApi";
  */
 export function useFetchApiCrud(path, baseUrl = null, additionalHeaders = {}) {
 
-  const { fetchApiToRef } = useFetchApi(baseUrl, additionalHeaders);
+  const { fetchApiToRef, fetchApi } = useFetchApi(baseUrl, additionalHeaders);
 
   function read(id, headers = {}, timeout = 5000) {
     return fetchApiToRef({
@@ -73,6 +73,7 @@ export function useFetchApiCrud(path, baseUrl = null, additionalHeaders = {}) {
     create,
     del,
     update,
-    fetchApiToRef
+    fetchApiToRef,
+    fetchApi,
   };
 }

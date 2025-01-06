@@ -1,9 +1,11 @@
 <script setup>
     import AppTabList from './AppTabList.vue';
     import BaseMap from './BaseMap.vue';
+    import BaseButton from './BaseButton.vue';
+    import BaseTag from './BaseTag.vue';
     import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
-    import { currentTrail } from '../store/utils';
-import { computed } from 'vue';
+    import { currentTrail } from '../stores/utils';
+    import { computed } from 'vue';
 
     const id = currentTrail.value;
     // const id = "676036d5a79c5402d16502ac";
@@ -16,6 +18,10 @@ import { computed } from 'vue';
         return data.value.postesInclus.length;
     });
 
+    const start = () => {
+        window.location.href='#parcours-actif';
+    }
+
 </script>
 
 <template>
@@ -23,9 +29,12 @@ import { computed } from 'vue';
     <div v-if="loading">...</div>
     <div id="parcours" v-else>
         <h1>{{ data.nom }}</h1>
-        <p>{{ data.difficulte }}</p>
+        <BaseTag :tag="data.difficulte"></BaseTag>
         <p v-if="data.descr">{{ data.descr }}</p>
         <p>Nombre de postes : {{ nombreDePostes }}</p>
+        <BaseButton @click="start">
+            Débuter le parcours
+        </BaseButton>
         <template v-if="data.resultatsAct.length > 0">
             <AppTabList :tab="data.resultatsAct"></AppTabList>
         </template>
