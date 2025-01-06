@@ -18,10 +18,10 @@ import { difficultySort } from '../composables/difficultySort';
 
 const toggleSortDifficulty = () => {
     if(!sorted || sorted === "desc"){
-        data.value.sort(DifficultySort);
+        data.value.sort(difficultySort);
         sorted = "asc";
     } else if(sorted === "asc") {
-        data.value.sort(DifficultySort).reverse();
+        data.value.sort(difficultySort).reverse();
         sorted = "desc";
     
     } /*else {
