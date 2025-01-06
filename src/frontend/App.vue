@@ -1,18 +1,36 @@
 <script setup>
 import { ref, computed } from 'vue';
 import TheHome from './components/TheHome.vue';
-import TheList from './components/TheList.vue';
 import TheNavBar from './components/TheNavBar.vue';
 import TheProfile from './components/TheProfile.vue';
+import TheCity from './components/TheCity.vue';
+import TheTrail from './components/TheTrail.vue';
+import TheActivTrail from './components/TheActivTrail.vue';
 
  const routes = {
     '#home': {
       component: TheHome,
       label: 'Accueil',
     },
-    '#liste': {
-      component: TheList,
-      label: 'Liste',
+    '#parcours-detail': {
+      component: TheTrail,
+      label: 'Details',
+    },
+    '#parcours-actif': {
+      component: TheActivTrail,
+      label: 'Parcours en cours',
+    },
+    '#bex': {
+      component: TheCity,
+      label: 'Bex',
+    },
+    '#stMaurice': {
+      component: TheCity,
+      label: 'St-Maurice',
+    },
+    '#yverdon': {
+      component: TheCity,
+      label: 'Yverdon',
     },
     '#profile': {
       component: TheProfile,
