@@ -79,15 +79,20 @@
         console.error('No token in response');
         return;
       }
-      fetchResults();
+      
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
       username.value = data.value.utilisateur.nom;
       userId.value = data.value.utilisateur.id;
+      fetchResults();
     });
     watch(error, () => {
       console.error('Error while logging in', error.value);
     });
+  }
+
+  if (isAuth.value) {
+    fetchResults();
   }
 </script>
 
