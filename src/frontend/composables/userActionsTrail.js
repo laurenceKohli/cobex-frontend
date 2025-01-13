@@ -27,6 +27,7 @@ export function scan () {
         nbPostesParcourus.value++;
     } else {
         stopTimer();
+        depart.value = false;
         console.log(endTimer.value);
         if(isAuth.value){
             saveResult();
@@ -35,6 +36,12 @@ export function scan () {
             window.location.href='#profile';
         }
     }
+}
+
+export function quitTrail(){
+    stopTimer();
+    depart.value = false;
+    window.location.href='#';
 }
 
 function degToRad(degrees) {

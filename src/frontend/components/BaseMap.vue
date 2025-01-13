@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch, onMounted, useTemplateRef } from 'vue';
-import BasePoint from './BasePoint.vue';
 
 const scale = ref(1);
 const canvas = useTemplateRef('canvas');
@@ -56,18 +55,17 @@ function handleMouseUp() {
     isDragging.value = false;
 }
 
-function drawPoint(geoloc) {
+function drawPoint(geoloc, active) {
     if (!ctx.value) return;
-    const x = Math.abs(long1 - geoloc.long)*44000;
-    const y = Math.abs(lat1 - geoloc.lat)*65000;
+    const x = Math.abs(long1 - geoloc.long)*40000;
+    const y = Math.abs(lat1 - geoloc.lat)*61500;
     ctx.value.fillStyle = "red";
     ctx.value.fillRect(x, y, 10, 10);
-}
-
-function getPointLocation(geoloc){
-    const x = Math.abs(long1 - geoloc.long)*44000;
-    const y = Math.abs(lat1 - geoloc.lat)*65000;
-    return { x, y };
+    const pointImage = new Image();
+    pointImage.src = active ? '/pin_active.png' : '/pin.png';
+    pointImage.onload = () => {
+        ctx.value.drawImage(pointImage, x, y, 30, 30);
+    };
 }
 
 function redrawCanvas() {
@@ -81,7 +79,7 @@ function redrawCanvas() {
 
     // Redessiner les points
     for (const poste of props.points) {
-        drawPoint(poste.geoloc);
+        drawPoint(poste.geoloc, poste.estAccessible);
     }
     ctx.value.restore();
 }
@@ -113,7 +111,6 @@ onMounted(() => {
     <div id="map">
         <canvas ref="canvas" id="mymap" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
             @mouseleave="handleMouseUp" :style="{ cursor: draggable ? 'grab' : 'default' }">
-            <BasePoint v-for="poste in points" :point="getPointLocation(poste.geoloc)" :isActive=poste.estAccessible />
         </canvas>
         <div v-if="draggable" class="zoom-controls">
             <button @click="zoomIn" class="zoom-btn">+</button>

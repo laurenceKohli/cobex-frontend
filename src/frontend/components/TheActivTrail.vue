@@ -6,23 +6,21 @@ import { currentTrail } from '../stores/utils';
 import { depart, nbPostesParcourus, nbPostesTotal } from '../stores/courseActuelle';
 import { computed, onMounted } from 'vue';
 import BaseButton from './BaseButton.vue';
+import { watch } from 'vue';
 
 import { startup, isVideoActive, toggleCamera } from '../composables/useUserMedia';
 import { getPosition, position } from '../composables/useUserPosition';
 import { analyseQRCode } from '../composables/userActionsTrail';
 
     const id = currentTrail.value;
-    console.log(id);
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
     const {data, error, loading} = parcoursCrud.read(id+'?include="postes"');
 
-    console.log(data, error, loading);
-    //A CHANGER
-    nbPostesTotal.value = 2;
-    console.log(nbPostesTotal.value);
+    watch(data, (val) => {
+      nbPostesTotal.value = val ? val.postesInclus.length : 0;
+    });
 
 const buttonText = computed(() => {
-    console.log(isVideoActive.value);
   return isVideoActive.value ? 'Prendre une photo' : 'Démarrer la caméra';
 });
 
@@ -36,7 +34,6 @@ const handleClick = async () => {
     document.getElementById("monImage").innerHTML = msg;
   }
 };
-
 
 onMounted(() => {
   startup();

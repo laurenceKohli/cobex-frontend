@@ -22,7 +22,7 @@ export const endTimer = ref(3)
  * Le timer démarre automatiquement lorsque la course démarre et s'arrête lorsque la course est terminée.
  */
 export const isTimerRunning = ref(false)
-export const timerValue = ref('01:00:00')
+export const timerValue = ref('00:00:01')
 let timerInterval
 
 watch(depart, (newValue) => {
@@ -71,6 +71,6 @@ export function saveResult() {
 export function stopTimer() {
   isTimerRunning.value = false
   endTimer.value = convertTimeToSeconds(timerValue.value)
-  timerValue.value = '00:00:00'
+  timerValue.value = '00:00:01'
   clearInterval(timerInterval)
 }

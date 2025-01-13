@@ -1,6 +1,7 @@
 <script setup>
 import BaseNavLink from './BaseNavLink.vue';
 import { depart, timerValue, nbPostesParcourus, nbPostesTotal } from '../stores/courseActuelle'
+import { quitTrail } from '../composables/userActionsTrail'
 
 </script>
 
@@ -21,6 +22,7 @@ import { depart, timerValue, nbPostesParcourus, nbPostesTotal } from '../stores/
             icon="cancel"
             class="quit"
             href="#home"
+            @click="quitTrail()"
             >Quitter</BaseNavLink>
     </div>
 </template>
