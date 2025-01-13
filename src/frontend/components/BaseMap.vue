@@ -5,6 +5,8 @@ const scale = ref(1);
 const canvas = useTemplateRef('canvas');
 const ctx = ref(null);
 const image = new Image();
+const pointImage = new Image();
+pointImage.src = '/pin_active.png';
 
 const lat1 = 46.786275;
 const long1 = 6.639786;
@@ -59,13 +61,7 @@ function drawPoint(geoloc, active) {
     if (!ctx.value) return;
     const x = Math.abs(long1 - geoloc.long)*40000;
     const y = Math.abs(lat1 - geoloc.lat)*61500;
-    ctx.value.fillStyle = "red";
-    ctx.value.fillRect(x, y, 10, 10);
-    const pointImage = new Image();
-    pointImage.src = active ? '/pin_active.png' : '/pin.png';
-    pointImage.onload = () => {
-        ctx.value.drawImage(pointImage, x, y, 30, 30);
-    };
+    ctx.value.drawImage(pointImage, x, y, 30, 30);
 }
 
 function redrawCanvas() {
