@@ -1,7 +1,7 @@
 import readQR from "./readQR";
 import { depart, nbPostesParcourus, stopTimer, endTimer, nbPostesTotal, saveResult } from '../stores/courseActuelle';
 import { position } from '../composables/useUserPosition';
-import { isAuth } from '../stores/user';
+import { isAuth, addHookLogin } from '../stores/user';
 
 export function analyseQRCode(imageData, postePosition) {
     const qrCode = readQR(imageData);
@@ -31,6 +31,7 @@ export function scan () {
         if(isAuth.value){
             saveResult();
         } else {
+            addHookLogin(saveResult);
             window.location.href='#profile';
         }
     }

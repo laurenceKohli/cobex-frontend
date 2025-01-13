@@ -7,13 +7,11 @@
     import { currentTrail } from '../stores/utils';
     import { computed } from 'vue';
 
-    // const id = currentTrail.value;
-    const id = "6774236a931a70b7bf27a3ba";
-    console.log(id);
+    const id = currentTrail.value;
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
     const {data, error, loading} = parcoursCrud.read(id+'?include="postes"');
 
-    console.log(data. loading, error);
+    console.log(data, loading, error);
     const nombreDePostes = computed(() => {
         return data.value.postesInclus.length;
     });

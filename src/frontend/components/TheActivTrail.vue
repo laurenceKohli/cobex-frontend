@@ -12,7 +12,6 @@ import { getPosition, position } from '../composables/useUserPosition';
 import { analyseQRCode } from '../composables/userActionsTrail';
 
     const id = currentTrail.value;
-    // const id = "6774236a931a70b7bf27a3ba"
     console.log(id);
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
     const {data, error, loading} = parcoursCrud.read(id+'?include="postes"');
@@ -47,7 +46,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <p>{{ data.nom }}</p>
+        <p>{{ data?.nom }}</p>
     </div>
 
     <div class="camera">
@@ -78,6 +77,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+#canvas {
+    display: none;
+}
+
 video {
     display: none;
 }

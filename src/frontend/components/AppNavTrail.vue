@@ -20,6 +20,7 @@ import { depart, timerValue, nbPostesParcourus, nbPostesTotal } from '../stores/
         <BaseNavLink
             icon="cancel"
             class="quit"
+            href="#home"
             >Quitter</BaseNavLink>
     </div>
 </template>
@@ -34,7 +35,7 @@ import { depart, timerValue, nbPostesParcourus, nbPostesTotal } from '../stores/
     align-items: center;
     ;
     gap: var(--spacing-large);
-    /*  bottom: 0; */
+    bottom: 0;
     left: 0;
     right: 0;
     padding: 1rem 0rem;

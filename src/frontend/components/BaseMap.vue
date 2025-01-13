@@ -1,20 +1,18 @@
 <script setup>
 import { ref, watch, onMounted, useTemplateRef } from 'vue';
 import BasePoint from './BasePoint.vue';
-import { useFetchApiCrud } from '../composables/useFetchApiCrud';
 
-const postesCrud = useFetchApiCrud('postes', import.meta.env.VITE_API_URL);
 const scale = ref(1);
 const canvas = useTemplateRef('canvas');
 const ctx = ref(null);
 const image = new Image();
 
-const lat1 = 2538999.10;
-const long1 = 1182004.52;
+const lat1 = 46.786275;
+const long1 = 6.639786;
 
 const props = defineProps({
     points: {
-        type: Object,
+        type: Array,
         required: true,
     },
     draggable: {
@@ -58,21 +56,18 @@ function handleMouseUp() {
     isDragging.value = false;
 }
 
-const postes = ref([]);
-for (const id of props.points) {
-    const { data, error, loading } = postesCrud.read(id);
-    watch(data, (newValue) => {
-        postes.value.push(newValue);
-        drawPoint(newValue);
-    });
-}
-
-function drawPoint(poste) {
+function drawPoint(geoloc) {
     if (!ctx.value) return;
-    const x = Math.abs(long1 - poste.geoloc.long);
-    const y = Math.abs(lat1 - poste.geoloc.lat);
+    const x = Math.abs(long1 - geoloc.long)*44000;
+    const y = Math.abs(lat1 - geoloc.lat)*65000;
     ctx.value.fillStyle = "red";
     ctx.value.fillRect(x, y, 10, 10);
+}
+
+function getPointLocation(geoloc){
+    const x = Math.abs(long1 - geoloc.long)*44000;
+    const y = Math.abs(lat1 - geoloc.lat)*65000;
+    return { x, y };
 }
 
 function redrawCanvas() {
@@ -85,8 +80,8 @@ function redrawCanvas() {
     ctx.value.drawImage(image, 0, 0);
 
     // Redessiner les points
-    for (const poste of postes.value) {
-        drawPoint(poste);
+    for (const poste of props.points) {
+        drawPoint(poste.geoloc);
     }
     ctx.value.restore();
 }
@@ -103,7 +98,6 @@ function zoomOut() {
 
 
 onMounted(() => {
-    // canvas.value = document.getElementById("mymap");
     ctx.value = canvas.value.getContext("2d");
     canvas.value.width = props.width;
     canvas.value.height = props.height;
@@ -118,7 +112,9 @@ onMounted(() => {
 <template>
     <div id="map">
         <canvas ref="canvas" id="mymap" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
-            @mouseleave="handleMouseUp" :style="{ cursor: draggable ? 'grab' : 'default' }"></canvas>
+            @mouseleave="handleMouseUp" :style="{ cursor: draggable ? 'grab' : 'default' }">
+            <BasePoint v-for="poste in points" :point="getPointLocation(poste.geoloc)" :isActive=poste.estAccessible />
+        </canvas>
         <div v-if="draggable" class="zoom-controls">
             <button @click="zoomIn" class="zoom-btn">+</button>
             <button @click="zoomOut" class="zoom-btn">-</button>
