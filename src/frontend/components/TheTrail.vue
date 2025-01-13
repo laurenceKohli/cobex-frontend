@@ -59,11 +59,11 @@
         <template v-if="data.resultatsAct.length > 0">
             <AppTabList :tab="data.resultatsAct"></AppTabList>
             <div class="page-nav" v-if="nombreDePages > 1">
-                <BaseButton class="previous" v-if="page > 1" @click="page--">Précédent</BaseButton>
+                <BaseButton class="secondary" v-if="page > 1" @click="page--">Précédent</BaseButton>
                 <div v-if="page == 1"></div>
                 <p>Page {{ page }} sur {{ nombreDePages }}</p>
                 <div v-if="page == nombreDePages"></div>
-                <BaseButton class="next" v-if="page < nombreDePages" @click="page++">Suivant</BaseButton>
+                <BaseButton class="secondary" v-if="page < nombreDePages" @click="page++">Suivant</BaseButton>
             </div>
         </template>
         <template v-else>
