@@ -60,7 +60,9 @@
             <AppTabList :tab="data.resultatsAct"></AppTabList>
             <div class="page-nav" v-if="nombreDePages > 1">
                 <BaseButton class="previous" v-if="page > 1" @click="page--">Précédent</BaseButton>
+                <div v-if="page == 1"></div>
                 <p>Page {{ page }} sur {{ nombreDePages }}</p>
+                <div v-if="page == nombreDePages"></div>
                 <BaseButton class="next" v-if="page < nombreDePages" @click="page++">Suivant</BaseButton>
             </div>
         </template>
@@ -74,7 +76,7 @@
 <style scoped>
     .page-nav {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         width: 100%;
     }
 </style>
