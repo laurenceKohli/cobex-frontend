@@ -27,7 +27,7 @@
   function fetchResults() {
     const {data, error} = resultCrud.fetchApiToRef({url: `resultats?utilisateurs=${userId.value}&include=parcours`, method: 'GET'});
     watch(data, () => {
-      resultData.value = data.value;
+      resultData.value = data.value.data;
       console.log(resultData.value);
     });
     watch(error, () => {
@@ -80,16 +80,21 @@
         console.error('No token in response');
         return;
       }
-      fetchResults();
+      
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
       username.value = data.value.utilisateur.nom;
       userId.value = data.value.utilisateur.id;
+      fetchResults();
       doHookLogin();
     });
     watch(error, () => {
       console.error('Error while logging in', error.value);
     });
+  }
+
+  if (isAuth.value) {
+    fetchResults();
   }
 </script>
 
