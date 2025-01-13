@@ -6,7 +6,6 @@ const props = defineProps({
     },
     href: {
         type: String,
-        default: '',
     }
 })
 </script>
