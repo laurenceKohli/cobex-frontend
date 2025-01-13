@@ -5,15 +5,18 @@
     import BaseTag from './BaseTag.vue';
     import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
     import { currentTrail } from '../stores/utils';
-    import { computed } from 'vue';
+    import { watch } from 'vue';
+    import { nbPostesTotal, postesActifs } from '../stores/courseActuelle';
 
     const id = currentTrail.value;
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
     const {data, error, loading} = parcoursCrud.read(id+'?include="postes"');
 
     console.log(data, loading, error);
-    const nombreDePostes = computed(() => {
-        return data.value.postesInclus.length;
+
+    watch(data, (val) => {
+        postesActifs.value = val.postesInclus.filter((res) => res.estAccessible);
+        nbPostesTotal.value = val ? postesActifs.value.length : 0;
     });
 
     const start = () => {
@@ -29,7 +32,7 @@
         <h1>{{ data.nom }}</h1>
         <BaseTag :tag="data.difficulte"></BaseTag>
         <p v-if="data.descr">{{ data.descr }}</p>
-        <p>Nombre de postes : {{ nombreDePostes }}</p>
+        <p>Nombre de postes : {{ nbPostesTotal }}</p>
         <BaseButton @click="start">
             Débuter le parcours
         </BaseButton>
@@ -40,7 +43,7 @@
             <p>Il n'y a pas encore de résultats pour ce parcours.</p>
         </template>
         
-         <BaseMap :points="data.postesInclus"></BaseMap>
+         <BaseMap :points="postesActifs"></BaseMap>
     </div>
 </template>
 

@@ -7,6 +7,7 @@ export const depart = ref(false)
 export const nbPostesParcourus = ref(0)
 export const nbPostesTotal = ref(0)
 export const endTimer = ref(3)
+export const postesActifs = ref([])
 
 
 /**

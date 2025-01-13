@@ -3,7 +3,7 @@ import AppNavTrail from './AppNavTrail.vue';
 import BaseMap from './BaseMap.vue';
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { currentTrail } from '../stores/utils';
-import { depart, nbPostesParcourus, nbPostesTotal } from '../stores/courseActuelle';
+import { depart, nbPostesParcourus, nbPostesTotal, postesActifs } from '../stores/courseActuelle';
 import { computed, onMounted } from 'vue';
 import BaseButton from './BaseButton.vue';
 import { watch } from 'vue';
@@ -16,16 +16,11 @@ import { analyseQRCode } from '../composables/userActionsTrail';
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
     const {data, error, loading} = parcoursCrud.read(id+'?include="postes"');
 
-    watch(data, (val) => {
-      nbPostesTotal.value = val ? val.postesInclus.length : 0;
-    });
-
 const buttonText = computed(() => {
   return isVideoActive.value ? 'Prendre une photo' : 'Démarrer la caméra';
 });
 
 const handleClick = async () => {
-    console.log('click');
   const imageData = toggleCamera();
  
   if (imageData) {
@@ -60,7 +55,7 @@ onMounted(() => {
 
 
     <template v-if="depart && nbPostesParcourus < nbPostesTotal">
-        <BaseMap :points="data.postesInclus" :draggable="true" :width=400 :height=500 />
+        <BaseMap :points="postesActifs" :draggable="true" :width=400 :height=500 />
     </template>
     <template v-else-if="nbPostesParcourus >= nbPostesTotal">
         <p>Bravo, vous avez terminé le parcours !</p>
