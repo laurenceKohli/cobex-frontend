@@ -2,7 +2,7 @@
   import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
   import { ref, watch } from 'vue';
   import { resultats } from '../stores/resultats';
-  import { isAuth, username, userId } from '../stores/user';
+  import { isAuth, username, userId, doHookLogin } from '../stores/user';
   import { setDefaultHeaders } from '../composables/useFetchApi';
 
   import AppTabList from './AppTabList.vue';
@@ -27,7 +27,7 @@
   function fetchResults() {
     const {data, error} = resultCrud.fetchApiToRef({url: `resultats?utilisateurs=${userId.value}&include=parcours`, method: 'GET'});
     watch(data, () => {
-      resultData.value = data.value;
+      resultData.value = data.value.data;
       console.log(resultData.value);
     });
     watch(error, () => {
@@ -57,6 +57,7 @@
       isAuth.value = true;
       username.value = data.value.utilisateur.nom;
       userId.value = data.value.utilisateur.id;
+      doHookLogin();
     });
     watch(error, () => {
       console.error('Error while creating account', error.value);
@@ -79,15 +80,21 @@
         console.error('No token in response');
         return;
       }
-      fetchResults();
+      
       setDefaultHeaders({Authorization: 'Bearer ' + jwt});
       isAuth.value = true;
       username.value = data.value.utilisateur.nom;
       userId.value = data.value.utilisateur.id;
+      fetchResults();
+      doHookLogin();
     });
     watch(error, () => {
       console.error('Error while logging in', error.value);
     });
+  }
+
+  if (isAuth.value) {
+    fetchResults();
   }
 </script>
 

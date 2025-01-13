@@ -5,16 +5,14 @@
     import BaseTag from './BaseTag.vue';
     import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
     import { currentTrail } from '../stores/utils';
+    import { nbPostesTotal, postesActifs } from '../stores/courseActuelle';
     import { computed, ref, watch, watchEffect } from 'vue';
 
     const id = currentTrail.value;
     const page = ref(0);
-    // const id = "676036d5a79c5402d16502ac";
-    console.log(id);
     console.log(page.value);
+
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
-    // const {data, error, loading} = parcoursCrud.read(id+'?include="postes"&page='+page.value);
-    // console.log(data.value);
     const error = ref(false);
     const loading = ref(true);
     const data = ref(null);
@@ -29,12 +27,13 @@
         });                
     });
 
-    const nombreDePostes = computed(() => {
-        return data.value?.postesInclus.length;
-    });
-
-    const nombreDePages = computed(() => {
+   const nombreDePages = computed(() => {
         return data.value?.nombrePages;
+   });
+
+    watch(data, (val) => {
+        postesActifs.value = val.postesInclus.filter((res) => res.estAccessible);
+        nbPostesTotal.value = val ? postesActifs.value.length : 0;
     });
 
     const start = () => {
@@ -52,7 +51,7 @@
         <h1>{{ data.nom }}</h1>
         <BaseTag :tag="data.difficulte"></BaseTag>
         <p v-if="data.descr">{{ data.descr }}</p>
-        <p>Nombre de postes : {{ nombreDePostes }}</p>
+        <p>Nombre de postes : {{ nbPostesTotal }}</p>
         <BaseButton @click="start">
             Débuter le parcours
         </BaseButton>
@@ -69,7 +68,7 @@
         <template v-else>
             <p>Il n'y a pas encore de résultats pour ce parcours.</p>
         </template>
-         <BaseMap :points="data.postesInclus"></BaseMap>
+         <BaseMap :points="postesActifs"></BaseMap>
     </div>
 </template>
 

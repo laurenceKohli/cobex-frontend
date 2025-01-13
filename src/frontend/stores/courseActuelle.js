@@ -5,7 +5,9 @@ import { username } from './user'
 
 export const depart = ref(false)
 export const nbPostesParcourus = ref(0)
+export const nbPostesTotal = ref(0)
 export const endTimer = ref(3)
+export const postesActifs = ref([])
 
 
 /**
@@ -21,7 +23,7 @@ export const endTimer = ref(3)
  * Le timer démarre automatiquement lorsque la course démarre et s'arrête lorsque la course est terminée.
  */
 export const isTimerRunning = ref(false)
-export const timerValue = ref('01:00:00')
+export const timerValue = ref('00:00:01')
 let timerInterval
 
 watch(depart, (newValue) => {
@@ -44,32 +46,32 @@ function startTimer() {
   }, 1000)
 }
 
-const resultatCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
+
 
 function convertTimeToSeconds(time) {
   const [h, m, s] = time.split(':')
   return parseInt(h) * 3600 + parseInt(m) * 60 + parseInt(s)
 }
 
-function saveResult() {
+export function saveResult() {
+  const resultatCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
   console.log('Enregistrement du résultat');
   console.log(username.value);
   const formData = {temps: endTimer.value, trailID: currentTrail.value}; 
   console.log('Donnees :', formData);
   const {data, error} = resultatCrud.create(formData);
-  watch(data, () => {
-    console.log('Resultat enregistré');
-    console.log(data.value);
-  });
-  watch(error, () => {
-    console.error('Error while creating resultat', error.value);
-  });
+  // watch(data, () => {
+  //   console.log('Resultat enregistré');
+  //   console.log(data.value);
+  // });
+  // watch(error, () => {
+  //   console.error('Error while creating resultat', error.value);
+  // });
 }
 
 export function stopTimer() {
   isTimerRunning.value = false
   endTimer.value = convertTimeToSeconds(timerValue.value)
-  saveResult()
-  timerValue.value = '00:00:00'
+  timerValue.value = '00:00:01'
   clearInterval(timerInterval)
 }
