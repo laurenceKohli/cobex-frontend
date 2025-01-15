@@ -12,8 +12,8 @@ export default defineConfig(({ command, mode }) => {
     server: {
       proxy : {
         '/api': {
-          //target: 'https://cobex-uu6t.onrender.com',
-          target: 'http://localhost:4000',
+          target: 'https://cobex-uu6t.onrender.com',
+          // target: 'http://localhost:4000',
           changeOrigin: true,
         },
       },

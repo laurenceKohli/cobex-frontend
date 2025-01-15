@@ -96,7 +96,7 @@ onMounted(() => {
     canvas.value.width = props.width;
     canvas.value.height = props.height;
 
-    image.src = '/map/map_yverdon.jpg';
+    image.src = '/map_yverdon.jpg';
     image.onload = () => {
         redrawCanvas();
     };
