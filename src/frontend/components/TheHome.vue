@@ -4,12 +4,10 @@ import BaseButton from './BaseButton.vue'
 const displayCity = (ville) => {
     window.location.href='#'+ville;
 }
-
 </script>
 
 <template>
     <h1>Parcours fixes de course d'orientation</h1>
-
     <div id="choixVille">
         <h2>Dans quelle ville voulez-vous faire votre course?</h2>
         <div id="choix">

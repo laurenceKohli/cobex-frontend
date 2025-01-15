@@ -25,9 +25,9 @@
   const resultData = ref([]);
 
   function fetchResults() {
-    const {data, error} = resultCrud.fetchApiToRef({url: `resultats?utilisateurs=${userId.value}&include=parcours`, method: 'GET'});
+    const {data, error} = resultCrud.fetchApiToRef({url: `resultats?utilisateurs=${userId.value}`, method: 'GET'});
     watch(data, () => {
-      resultData.value = data.value.data;
+      resultData.value = data.value;
       console.log(resultData.value);
     });
     watch(error, () => {
