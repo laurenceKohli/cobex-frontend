@@ -99,7 +99,7 @@
 </script>
 
 <template>
-  <div v-if="isAuth">
+  <div class="profile-container" v-if="isAuth">
     <p>Bonjour {{ username }}</p>
     <h2>Résultats effectués</h2>
     <template v-if="resultData.length > 0">
@@ -107,7 +107,7 @@
     </template>
   </div>
 
-  <form v-else-if="create" @submit="submitCreate" method="post">
+  <form class="auth-form" v-else-if="create" @submit="submitCreate" method="post">
     <div>
       <div class="input">
         <BaseInputLabel for="name">Nom</BaseInputLabel>
@@ -133,7 +133,7 @@
     </div>
   </form>
   
-  <form v-else @submit="submitLogin" method="post">
+  <form class="auth-form" v-else @submit="submitLogin" method="post">
     <div class="input">
       <BaseInputLabel for="name">Nom</BaseInputLabel>
       <BaseInput type="text" name="nom" id="name" v-model="name"/>
@@ -168,5 +168,29 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-medium);
+  }
+
+  .profile-container {
+    padding: var(--spacing-large);
+  }
+
+  .auth-form {
+    padding: var(--spacing-large);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 400px;
+    margin: auto;
+  }
+
+  @media (max-width: var(--breakpoint-medium)) {
+    .profile-container, .auth-form {
+      padding: var(--spacing-medium);
+    }
+  }
+
+  @media (max-width: var(--breakpoint-small)) {
+    .profile-container, .auth-form {
+      padding: var(--spacing-small);
+    }
   }
 </style>
