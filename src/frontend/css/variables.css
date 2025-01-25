@@ -29,4 +29,15 @@
     /*Animations*/
     --default-transition: 300ms ease-in-out;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    /* Responsive font sizes */
+    --font-size-small: 0.875rem;
+    --font-size-medium: 1rem;
+    --font-size-large: 1.25rem;
+    --font-size-xlarge: 1.5rem;
+
+    /* Responsive breakpoints */
+    --breakpoint-small: 480px;
+    --breakpoint-medium: 768px;
+    --breakpoint-large: 1024px;
 }
