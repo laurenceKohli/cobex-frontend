@@ -48,7 +48,7 @@ const showCameraItem = async () => {
 
 <template>
     <div>
-        <p>{{ data?.nom }}</p>
+        <h2>{{ data?.nom }}</h2>
     </div>
 
     <!-- Modal Camera -->
@@ -130,5 +130,17 @@ video {
     max-width: 100%;
     display: block;
     margin-bottom: 1rem;
+}
+
+p {
+    text-align: center;
+    color: var(--text-color);
+    margin-top: var(--spacing-medium);
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+    }
 }
 </style>
