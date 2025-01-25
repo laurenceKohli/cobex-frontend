@@ -33,7 +33,9 @@ const displayCity = (ville) => {
     padding: 2rem;
     background-color: var(--background-color);
     border-radius: var(--border-radius);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
+    max-width: 600px;
+    margin: auto;
 }
 
 #choix {
