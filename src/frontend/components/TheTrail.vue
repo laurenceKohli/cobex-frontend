@@ -111,6 +111,7 @@ p {
 @media (max-width: 768px) {
     #parcours {
         padding: var(--spacing-medium);
+        padding-bottom: var(--spacing-large);
     }
 
     .page-nav {
