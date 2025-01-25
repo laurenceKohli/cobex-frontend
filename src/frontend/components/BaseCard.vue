@@ -33,7 +33,7 @@ const props = defineProps({
 
 .nom {
     font-size: 1.5rem;
-    color: var(--color-primary);
+    color: var(--color-tertiary);
     margin: var(--spacing-medium) 0;
 }
 

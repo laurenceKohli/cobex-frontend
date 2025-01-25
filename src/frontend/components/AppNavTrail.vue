@@ -29,7 +29,7 @@ import { quitTrail } from '../composables/userActionsTrail'
 
 <style scoped>
 .nav {
-    background-color: var(--color-primary);
+    background-color: var(--color-secondary);
 
     display: flex;
     position: fixed;
