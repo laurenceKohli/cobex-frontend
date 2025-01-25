@@ -71,7 +71,7 @@ const showCameraItem = async () => {
     </div>
 
     <template v-if="depart && nbPostesParcourus < nbPostesTotal">
-        <BaseMap :points="postesActifs" :draggable="true" :width=400 :height=500 />
+        <BaseMap :points="postesActifs" :draggable="true" :width=600 :height=500 />
         <BaseButton @click="showCameraItem" icon="qr_code_scanner">Scanner QR Code</BaseButton>
     </template>
     <template v-else-if="nbPostesParcourus >= nbPostesTotal">
