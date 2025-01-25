@@ -32,14 +32,12 @@ switch (ville) {
 
 //si link change alors on va sur la page du parcours
 watch(link, (newValue) => {
-    console.log(newValue);
     currentTrail.value = newValue;
     window.location.href = `#parcours-detail`;
 });
 
 const showModal = () => {
     showFilterModal.value = true;
-    console.log(showFilterModal.value);
 }
 
 const applyFilters = () => {
@@ -54,10 +52,6 @@ const resetFilters = () => {
 const closeModal = () => {
     showFilterModal.value = false;
 }
-
-watch(filterDifficulty, (newValue) => {
-    console.log("diff:" + newValue);
-});
 
 const parcoursFiltres = computed(() => {
     if (filterDifficulty.value === 'tout') return data.value;

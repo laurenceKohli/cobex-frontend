@@ -12,7 +12,6 @@ const props = defineProps({
 
 let link = ref([]);
 watch(link, (newValue) => {
-        console.log(newValue);
         currentTrail.value = newValue;
         window.location.href = `#parcours-detail`;
     });

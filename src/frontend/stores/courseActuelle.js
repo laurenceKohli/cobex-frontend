@@ -55,18 +55,11 @@ function convertTimeToSeconds(time) {
 
 export function saveResult() {
   const resultatCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
-  console.log('Enregistrement du résultat');
-  console.log(username.value);
   const formData = {temps: endTimer.value, trailID: currentTrail.value}; 
-  console.log('Donnees :', formData);
   const {data, error} = resultatCrud.create(formData);
-  // watch(data, () => {
-  //   console.log('Resultat enregistré');
-  //   console.log(data.value);
-  // });
-  // watch(error, () => {
-  //   console.error('Error while creating resultat', error.value);
-  // });
+  if (error.value) {
+    console.error(error.value)
+  }
 }
 
 export function stopTimer() {

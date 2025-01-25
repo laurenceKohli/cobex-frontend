@@ -6,7 +6,6 @@ import { isAuth, addHookLogin } from '../stores/user';
 export function analyseQRCode(imageData, postePosition) {
     const qrCode = readQR(imageData);
     if(compareLocalisations(postePosition, position.value)) {
-        console.log(postePosition);
         scan();
         return 'C\'est fait ' + qrCode;
     }else {
@@ -28,7 +27,6 @@ export function scan () {
     } else {
         stopTimer();
         depart.value = false;
-        console.log(endTimer.value);
         if(isAuth.value){
             saveResult();
         } else {
