@@ -26,11 +26,11 @@
     display: flex;
     align-items: center;
     height: 2.5rem;
-    padding: 0 1rem;
     gap: var(--spacing-small);
     background-color: var(--color-primary);
     border-radius: var(--border-radius);
     border: none;
+    padding: var(--spacing-medium);
  }
 
     button:hover{

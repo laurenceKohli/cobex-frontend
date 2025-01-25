@@ -7,6 +7,7 @@
     --color-accent: #efa00f;
     
     --background-color: #fff;
+    --background-color-light: #f9f9f9;
 
     --text-color: #e6d1b4;
     --color-error: #ff0000;
@@ -27,4 +28,5 @@
 
     /*Animations*/
     --default-transition: 300ms ease-in-out;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
