@@ -6,10 +6,11 @@
     import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
     import { currentTrail } from '../stores/utils';
     import { nbPostesTotal, postesActifs } from '../stores/courseActuelle';
-    import { computed, ref, watch, watchEffect } from 'vue';
+    import { computed, ref, watch} from 'vue';
 
     const id = currentTrail.value;
     const page = ref(0);
+    const pageLimit = ref(0);
     console.log(page.value);
 
     const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
@@ -23,8 +24,10 @@
             error.value = e.value;
             loading.value = l.value;
             data.value = d.value;
-            console.log(data.value);
-        });                
+            if (pageLimit.value === 0 && data.value.resultatsAct.length !== 0 && page.value === 1) {
+                pageLimit.value = data.value.resultatsAct.length;
+            }
+        });          
     });
 
    const nombreDePages = computed(() => {
@@ -39,6 +42,7 @@
     const start = () => {
         window.location.href='#parcours-actif';
     }
+    
     setTimeout(() => {
         page.value = 1;
     }, 1);
@@ -56,7 +60,7 @@
             Débuter le parcours
         </BaseButton>
         <template v-if="data.resultatsAct.length > 0">
-            <AppTabList :tab="data.resultatsAct"></AppTabList>
+            <AppTabList :tab="data.resultatsAct" :pageData="{ page, pageLimit }"></AppTabList>
             <div class="page-nav" v-if="nombreDePages > 1">
                 <BaseButton class="secondary" v-if="page > 1" @click="page--">Précédent</BaseButton>
                 <div v-if="page == 1"></div>
