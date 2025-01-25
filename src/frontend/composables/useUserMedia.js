@@ -47,7 +47,7 @@ function takepicture() {
   return null;
 }
 
-function startVideo() {
+export function startVideo() {
   if (!video.value) {
     console.error('Element video non trouvé');
     return Promise.reject(new Error('Video element not found'));
@@ -69,7 +69,7 @@ function startVideo() {
     });
 }
 
-function stopVideo() {
+export function stopVideo() {
   if (!video.value) return;
   
   if (videoStream) {

@@ -7,7 +7,7 @@ import { depart, nbPostesParcourus, nbPostesTotal, postesActifs } from '../store
 import { computed, onMounted, ref, nextTick } from 'vue';
 import BaseButton from './BaseButton.vue';
 
-import { startup, isVideoActive, toggleCamera } from '../composables/useUserMedia';
+import { startup, isVideoActive, toggleCamera, startVideo, stopVideo } from '../composables/useUserMedia';
 import { getPosition, position } from '../composables/useUserPosition';
 import { analyseQRCode } from '../composables/userActionsTrail';
 
@@ -34,12 +34,14 @@ const canvasRef = ref(null);
 
 const showCamera = ref(false);
 
-const showCameraItem = () => {
+const showCameraItem = async () => {
   showCamera.value = !showCamera.value;
   if (showCamera.value) {
-    nextTick(() => {
-      startup(videoRef.value, canvasRef.value);
-    });
+    await nextTick();
+    await startup(videoRef.value, canvasRef.value);
+    await startVideo(); // Démarrer directement la caméra
+  } else {
+    stopVideo(); // Arrêter la caméra quand on ferme le modal
   }
 }
 </script>
