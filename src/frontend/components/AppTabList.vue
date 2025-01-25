@@ -13,7 +13,7 @@ const props = defineProps({
     <template v-for="(ligne, index) in Object.entries(tab)" :key="index">
       <BaseTabLine v-if="pageData" :info="ligne[1]" :numero="index + (pageData.page - 1)*pageData.pageLimit + 1">
       </BaseTabLine>
-      <BaseTabLine v-else :info="ligne[1]" :numero="index + 1"></BaseTabLine>
+      <BaseTabLine v-else :info="ligne[1]"></BaseTabLine>
     </template>
   </div>
 </template>
