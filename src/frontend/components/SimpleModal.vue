@@ -1,16 +1,28 @@
 <script setup>
+import BaseButton from './BaseButton.vue';
+import { ref } from 'vue';
+
+const emit = defineEmits(['close']);
+
 const props = defineProps({
     modalContent : String,
-    modalCondition : Boolean
+    modalCondition : Boolean,
+    modalCloser : {
+        type : Boolean,
+        default : false
+    }
 })
 </script>
 
 <template>
     <div v-if="modalCondition" class="modalBackdrop" @click="closeModal">
-        <div class="modal" @click.stop>
+        <div class="modal">
             <div class="modalContent">
                 <div class="modalHeader">
                     <h3>{{ modalContent }}</h3>
+                </div>
+                <div v-if="modalCloser" class="modalFooter">
+                    <BaseButton @click="$emit('close')">Fermer</BaseButton>
                 </div>
             </div>
         </div>

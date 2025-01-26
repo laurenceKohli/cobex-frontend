@@ -1,12 +1,11 @@
 import readQR from "./readQR";
-import { depart, nbPostesParcourus, stopTimer, endTimer, nbPostesTotal, saveResult } from '../stores/courseActuelle';
+import { depart, nbPostesParcourus, stopTimer, endTimer, nbPostesTotal, saveResult, finParcours, parcoursSaved, failedSave } from '../stores/courseActuelle';
 import { position } from '../composables/useUserPosition';
 import { isAuth, addHookLogin } from '../stores/user';
 
 export function analyseQRCode(imageData, postePosition) {
     const qrCode = readQR(imageData);
     if(compareLocalisations(postePosition, position.value)) {
-        console.log(postePosition);
         scan();
         return 'C\'est fait ' + qrCode;
     }else {
@@ -27,9 +26,11 @@ export function scan () {
         nbPostesParcourus.value++;
     } else {
         stopTimer();
+        nbPostesParcourus.value = 0;
+        finParcours.value = true;
         depart.value = false;
-        console.log(endTimer.value);
         if(isAuth.value){
+            finParcours.value = false;
             saveResult();
         } else {
             addHookLogin(saveResult);
@@ -38,9 +39,16 @@ export function scan () {
     }
 }
 
+const closeActiveModal = () => {
+    parcoursSaved.value = false;
+    failedSave.value = false;
+};
+
 export function quitTrail(){
+    closeActiveModal();
     stopTimer();
     depart.value = false;
+    nbPostesParcourus.value = 0;
     window.location.href='#';
 }
 
@@ -55,3 +63,4 @@ export function calculateDistance(src, dest) {
     const angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return angle * 6371000;
 }
+

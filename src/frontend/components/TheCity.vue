@@ -3,7 +3,8 @@ import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
 import BaseButton from './BaseButton.vue';
 import { compile, computed, ref, watch } from 'vue';
-import { currentTrail } from '../stores/utils';
+import { currentTrail, currentTrailName } from '../stores/utils';
+import { finParcours } from '../stores/courseActuelle';
 import { difficultySort } from '../composables/difficultySort';
 import SimpleModal from './SimpleModal.vue';
 
@@ -31,14 +32,13 @@ switch(ville){
 }
 
 watch(link, (newValue) => {
-    console.log(newValue);
-    currentTrail.value = newValue;
+    currentTrail.value = newValue.id;
+    currentTrailName.value = newValue.nom;
     window.location.href = `#parcours-detail`;
 });
 
 const showModal = () => {
     showFilterModal.value = true;
-    console.log(showFilterModal.value);
 }
 
 const applyFilters = () => {
@@ -53,10 +53,6 @@ const resetFilters = () => {
 const closeModal = () => {
     showFilterModal.value = false;
 }
-
-watch(filterDifficulty, (newValue) => {
-    console.log("diff:"+newValue);
-});
 
 const parcoursFiltres = computed(() => {
     if (filterDifficulty.value === 'tout') return data.value;
@@ -91,7 +87,7 @@ const showLoadingModal = computed(() => loading.value);
             <template v-for="parcours in sortedParcours">
                     <BaseCard
                         :info="parcours"
-                        @click="link = parcours.id"
+                        @click="link = {id : parcours.id, nom : parcours.nom}"
                     ></BaseCard>
             </template>
         </div>
@@ -141,10 +137,7 @@ const showLoadingModal = computed(() => loading.value);
         </div>
     </div>
 
-    <SimpleModal
-        :modalContent="'Parcours en chargement...'"
-        :modalCondition="showLoadingModal">
-    </SimpleModal>
+    <SimpleModal :modalContent="'Parcours en chargement...'" :modalCondition="showLoadingModal"/>
 </template>
 
 <style scoped>

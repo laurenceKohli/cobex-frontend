@@ -2,10 +2,11 @@
 import AppNavTrail from './AppNavTrail.vue';
 import BaseMap from './BaseMap.vue';
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
-import { currentTrail } from '../stores/utils';
-import { depart, nbPostesParcourus, nbPostesTotal, postesActifs } from '../stores/courseActuelle';
+import { currentTrail, currentTrailName } from '../stores/utils';
+import { depart, nbPostesParcourus, nbPostesTotal, postesActifs, parcoursSaved, failedSave } from '../stores/courseActuelle';
 import { computed, onMounted } from 'vue';
 import BaseButton from './BaseButton.vue';
+import SimpleModal from './SimpleModal.vue';
 import { watch } from 'vue';
 
 import { startup, isVideoActive, toggleCamera } from '../composables/useUserMedia';
@@ -21,6 +22,9 @@ const buttonText = computed(() => {
 });
 
 const handleClick = async () => {
+  console.log(depart.value);
+  console.log(nbPostesParcourus.value);
+  console.log(nbPostesTotal.value);
   const imageData = toggleCamera();
  
   if (imageData) {
@@ -28,6 +32,12 @@ const handleClick = async () => {
     const msg = analyseQRCode(imageData, position.value);
     document.getElementById("monImage").innerHTML = msg;
   }
+};
+
+//ferme n'importe quelle modale ouverte (les deux modales sont incompatibles)
+const handleClose = () => {
+  parcoursSaved.value = false;
+  failedSave.value = false;
 };
 
 onMounted(() => {
@@ -66,6 +76,8 @@ onMounted(() => {
         <p>Scanner le QR code du départ pour démarrer la course</p>
     </template> 
     <AppNavTrail/>
+    <SimpleModal :modalContent="'Parcours sauvegardé avec succès.'" :modalCondition="parcoursSaved" :modalCloser="true" @close="handleClose"/>
+    <SimpleModal :modalContent="'Échec de la sauvegarde du parcours'" :modalCondition="failedSave" :modalCloser="true" @close="handleClose"/>
 </template>
 
 <style scoped>

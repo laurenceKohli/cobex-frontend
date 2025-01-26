@@ -3,8 +3,9 @@ import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { computed, ref, watch } from 'vue';
 import { isAuth, username, userId, doHookLogin, resultats } from '../stores/user';
 import { setDefaultHeaders } from '../composables/useFetchApi';
-import SimpleModal from './SimpleModal.vue';
+import { finParcours } from '../stores/courseActuelle';
 
+import SimpleModal from './SimpleModal.vue';
 import AppTabList from './AppTabList.vue';
 import BaseInput from './BaseInput.vue';
 import BaseInputLabel from './BaseInputLabel.vue';
@@ -105,12 +106,13 @@ function submitLogin(event) {
   });
 }
 
+const handleClose = () => {
+  console.log('closing modal');
+  finParcours.value = false;
+}
+
 const showLoadingModal = computed(() => globalLoading.value);
 
-
-watch(showLoadingModal, (val) => {
-  console.log(val);
-});
 </script>
 
 <template>
@@ -166,10 +168,8 @@ watch(showLoadingModal, (val) => {
     </div>
   </form>
 
-  <SimpleModal
-    :modalContent="'Résultats en chargement...'"
-    :modalCondition="showLoadingModal">
-  </SimpleModal>
+  <SimpleModal :modalContent="'Résultats en chargement...'" :modalCondition="showLoadingModal"/>
+  <SimpleModal :modalContent="'Veuillez vous connecter pour enregistrer le parcours'" :modalCondition="finParcours" :modalCloser="true" @close="handleClose"/>
 </template>
 
 <style scoped>

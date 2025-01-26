@@ -1,13 +1,17 @@
 import { ref, watch } from 'vue'
-import { currentTrail } from './utils'
+import { currentTrail, currentTrailName } from './utils'
 import { useFetchApiCrud } from '../composables/useFetchApiCrud'
-import { username } from './user'
+import { username, resultats } from './user'
+import SimpleModal from '../components/SimpleModal.vue'
 
 export const depart = ref(false)
 export const nbPostesParcourus = ref(0)
 export const nbPostesTotal = ref(0)
 export const endTimer = ref(3)
 export const postesActifs = ref([])
+export const finParcours = ref(false)
+export const parcoursSaved = ref(false)
+export const failedSave = ref(false)
 
 
 /**
@@ -57,16 +61,24 @@ export function saveResult() {
   const resultatCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
   console.log('Enregistrement du résultat');
   console.log(username.value);
-  const formData = {temps: endTimer.value, trailID: currentTrail.value}; 
+  const formData = {temps: endTimer.value, trailID: currentTrail.value};
   console.log('Donnees :', formData);
-  const {data, error} = resultatCrud.create(formData);
-  // watch(data, () => {
-  //   console.log('Resultat enregistré');
-  //   console.log(data.value);
-  // });
-  // watch(error, () => {
-  //   console.error('Error while creating resultat', error.value);
-  // });
+  const {data, error, loading} = resultatCrud.create(formData);
+  console.log('Data :', data);
+  watch(data, () => {
+    parcoursSaved.value = true;
+    resultats.value.push({
+      id : data.value.id,
+      parcours : {
+        id : currentTrail.value,
+        nom : currentTrailName.value
+      },
+      temps : data.value.temps
+    });
+  });
+  watch(error, () => {
+    failedSave.value = true;
+  });
 }
 
 export function stopTimer() {
