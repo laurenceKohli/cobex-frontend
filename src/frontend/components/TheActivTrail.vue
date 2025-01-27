@@ -5,7 +5,7 @@ import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { computed, onMounted, ref, nextTick, watch } from 'vue';
 
 import { currentTrail, currentTrailName } from '../stores/utils';
-import { depart, nbPostesParcourus, nbPostesTotal, postesActifs, parcoursSaved, failedSave } from '../stores/courseActuelle';
+import { depart, nbPostesParcourus, nbPostesTotal, postesActifs, parcoursSaved, failedSave, stopTimer } from '../stores/courseActuelle';
 import BaseButton from './BaseButton.vue';
 import SimpleModal from './SimpleModal.vue';
 
@@ -21,9 +21,22 @@ const buttonText = computed(() => {
   return isVideoActive.value ? 'Prendre une photo' : 'Démarrer la caméra';
 });
 
+const handleHashChange = () => {
+  depart.value = false;
+  nbPostesParcourus.value = 0;
+  stopTimer();
+}
+
+window.onhashchange = handleHashChange;
+
 const handleClick = async () => {
   const imageData = toggleCamera();
- 
+  
+  if (nbPostesParcourus.value >= nbPostesTotal.value && !isVideoActive.value) {
+    console.log(nbPostesParcourus.value, nbPostesTotal.value);
+    showCamera.value = false;
+  }
+
   if (imageData) {
     await getPosition();
     const msg = analyseQRCode(imageData, position.value);

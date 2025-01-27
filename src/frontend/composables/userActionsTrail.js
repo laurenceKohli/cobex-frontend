@@ -25,7 +25,6 @@ export function scan () {
     } else if(nbPostesParcourus.value < nbPostesTotal.value) {
         nbPostesParcourus.value++;
     } else {
-        stopTimer();
         nbPostesParcourus.value = 0;
         finParcours.value = true;
         depart.value = false;
@@ -46,7 +45,6 @@ const closeActiveModal = () => {
 
 export function quitTrail(){
     closeActiveModal();
-    stopTimer();
     depart.value = false;
     nbPostesParcourus.value = 0;
     window.location.href='#';
