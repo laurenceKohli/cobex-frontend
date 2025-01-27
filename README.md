@@ -34,3 +34,14 @@ Pour installer et démarrer le projet, suivez les étapes ci-dessous :
     ```bash
     npm run dev
     ```
+
+## Fonctionnement du parcours en cours
+
+Lorsqu'un utilisateur démarre un parcours, il doit scanner un QR code de départ pour commencer la course. Voici les étapes principales :
+
+1. **Démarrage du parcours** : L'utilisateur scanne le QR code de départ pour démarrer la course. Le chronomètre commence à ce moment-là.
+2. **Suivi des postes** : L'utilisateur doit se rendre à chaque poste du parcours et scanner le QR code correspondant. La position de l'utilisateur est vérifiée pour s'assurer qu'il est à proximité du poste (<10m).
+3. **Fin du parcours** : Une fois que tous les postes ont été scannés, l'utilisateur doit scanner le QR code de fin pour terminer la course. Le chronomètre s'arrête et les résultats sont enregistrés.
+4. **Sauvegarde des résultats** : Si l'utilisateur est authentifié, les résultats sont automatiquement sauvegardés. Sinon, il est invité à se connecter pour enregistrer ses résultats.
+
+Les utilisateurs peuvent consulter leurs résultats dans leur profil après avoir terminé un parcours.
