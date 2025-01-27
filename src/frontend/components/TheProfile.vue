@@ -4,7 +4,7 @@ import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { computed, ref, watch } from 'vue';
 import { isAuth, username, userId, doHookLogin, resultats } from '../stores/user';
 import { setDefaultHeaders } from '../composables/useFetchApi';
-import { finParcours } from '../stores/courseActuelle';
+import { finParcours, parcoursSaved, failedSave } from '../stores/courseActuelle';
 
 import SimpleModal from './SimpleModal.vue';
 import AppTabList from './AppTabList.vue';
@@ -25,6 +25,8 @@ const invalidEmail = ref(false);
 const emailExists = ref(false);
 
 const connRef = ref(false);
+const noConn = ref(false);
+const genericError = ref(false);
 const unexpResp = ref(false);
 const globalLoading = ref(false);
 
@@ -94,6 +96,8 @@ function submitLogin(event) {
     setDefaultHeaders({Authorization: 'Bearer ' + jwt});
     isAuth.value = true;
     connRef.value = false;
+    noConn.value = false;
+    genericError.value = false;
     unexpResp.value = false;
     username.value = data.value.utilisateur.nom;
     userId.value = data.value.utilisateur.id;
@@ -103,12 +107,26 @@ function submitLogin(event) {
   watch(error, () => {
     globalLoading.value = loading.value;  
     console.error('Error while logging in', error.value);
-    connRef.value = true;
+    if (error.value.status === 401) {
+      connRef.value = true;
+      noConn.value = false;
+      genericError.value = false;
+    } else if (error.value.status === 0) {
+      noConn.value = true;
+      connRef.value = false;
+      genericError.value = false;
+    } else {
+      genericError.value = true;
+      connRef.value = false;
+      noConn.value = false;
+    }
   });
 }
 
 const handleClose = () => {
   finParcours.value = false;
+  parcoursSaved.value = false;
+  failedSave.value = false;
 }
 
 const showLoadingModal = computed(() => globalLoading.value);
@@ -160,6 +178,8 @@ const showLoadingModal = computed(() => globalLoading.value);
       <BaseInput type="text" name="mdp" id="password" v-model="password" />
     </div>
     <BaseInputError v-if="connRef" message="Identifiants incorrects"/>
+    <BaseInputError v-if="noConn" message="Veuillez vérifier votre connexion"/>
+    <BaseInputError v-if="genericError" message="Une erreur imprévue est survenue"/>
     <BaseInputError v-if="unexpResp" message="Réponse non conforme reçue. Veuillez contacter le support informatique."/>
     <div class="choix">
       <BaseButton type="submit">Se connecter</BaseButton>
@@ -167,8 +187,11 @@ const showLoadingModal = computed(() => globalLoading.value);
     </div>
   </form>
 
-  <SimpleModal :modalContent="'Résultats en chargement...'" :modalCondition="showLoadingModal"/>
+  <SimpleModal :modalContent="'Connection en cours...'" :modalCondition="showLoadingModal"/>
+
   <SimpleModal :modalContent="'Veuillez vous connecter pour enregistrer le parcours'" :modalCondition="finParcours" :modalCloser="true" @close="handleClose"/>
+  <SimpleModal :modalContent="'Parcours sauvegardé avec succès.'" :modalCondition="parcoursSaved" :modalCloser="true" @close="handleClose"/>
+  <SimpleModal :modalContent="'Échec de la sauvegarde du parcours'" :modalCondition="failedSave" :modalCloser="true" @close="handleClose"/>
 </template>
 
 <style scoped>
