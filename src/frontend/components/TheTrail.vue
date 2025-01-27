@@ -12,7 +12,6 @@ import SimpleModal from './SimpleModal.vue';
 
 const id = currentTrail.value;
 const page = ref(0);
-console.log(page.value);
 
 const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
 const error = ref(false);
@@ -62,6 +61,7 @@ setTimeout(() => {
         <BaseButton @click="start">
             Débuter le parcours
         </BaseButton>
+
         <template v-if="data.resultatsAct?.length > 0">
             <AppTabList :tab="data.resultatsAct"></AppTabList>
             <div class="page-nav" v-if="nombreDePages > 1">
