@@ -33,7 +33,6 @@ const handleClick = async () => {
   const imageData = toggleCamera();
   
   if (nbPostesParcourus.value >= nbPostesTotal.value && !isVideoActive.value) {
-    console.log(nbPostesParcourus.value, nbPostesTotal.value);
     showCamera.value = false;
   }
 
