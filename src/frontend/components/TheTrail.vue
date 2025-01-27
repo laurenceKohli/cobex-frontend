@@ -27,9 +27,9 @@ watch(page, () => {
         error.value = e.value;
         loading.value = l.value;
         data.value = d.value;
-        if (pageLimit.value === 0 && data?.value.resultatsAct?.length !== 0 && page.value === 1) {
-                pageLimit.value = data.value.resultatsAct.length;
-            }
+        if (pageLimit.value === 0 && data?.value?.resultatsAct?.length && page.value === 1) {
+            pageLimit.value = data.value.resultatsAct.length;
+        }
     });
 });
 
