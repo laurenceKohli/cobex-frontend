@@ -38,6 +38,6 @@ const props = defineProps({
 }
 
 a.active, a.active span {
-    color: var(--color-primary);
+    color: var(--color-tertiary);
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
+import { useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
 import BaseButton from './BaseButton.vue';
 import { compile, computed, ref, watch } from 'vue';
@@ -15,14 +15,15 @@ const ville = window.location.href.split('#')[1];
 const villeCapitalized = ville.charAt(0).toUpperCase() + ville.slice(1);
 
 const parcoursCrud = useFetchApiCrud('parcours', import.meta.env.VITE_API_URL);
-const {data, error, loading} = parcoursCrud.readAll();
+const { data, error, loading } = parcoursCrud.readAll();
+
 let nomVille = '';
 let link = ref([]);
 const sorted = ref("asc");
 
 const toggleSortDifficulty = () => sorted.value === "asc" ? sorted.value = "desc" : sorted.value = "asc";
 
-switch(ville){
+switch (ville) {
     case 'yverdon':
         nomVille = villeCapitalized;
         break;
@@ -60,15 +61,14 @@ const parcoursFiltres = computed(() => {
 });
 
 const sortedParcours = computed(() => {
-    if(sorted.value === "asc"){
+    if (sorted.value === "asc") {
         return parcoursFiltres.value?.toSorted(difficultySort);
-    } else if(sorted.value === "desc") {
-        return parcoursFiltres.value?.toSorted((a,b) => -difficultySort(a, b));
+    } else if (sorted.value === "desc") {
+        return parcoursFiltres.value?.toSorted((a, b) => -difficultySort(a, b));
     }
 });
 
 const showLoadingModal = computed(() => loading.value);
-
 </script>
 
 <template>
@@ -128,43 +128,69 @@ const showLoadingModal = computed(() => loading.value);
                             </div>
                         </div>
                     </div>
-                    <div class="modalFooter">
-                        <BaseButton class="Button" @click="resetFilters">RÉINITIALISER</BaseButton>
-                        <BaseButton @click="applyFilters">VALIDER</BaseButton>
-                    </div>
+                </div>
+                <div class="modalFooter">
+                    <BaseButton class="secondary" @click="resetFilters">Réinitialiser</BaseButton>
+                    <BaseButton @click="applyFilters">Valider</BaseButton>
                 </div>
             </div>
         </div>
     </div>
-
     <SimpleModal :modalContent="'Parcours en chargement...'" :modalCondition="showLoadingModal"/>
 </template>
 
 <style scoped>
-
-.error {
-    color: red;
+.city {
+    text-align: center;
+    margin-bottom: var(--spacing-large);
 }
 
-div.trailsList {
+.trailsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-large);
+    margin-top: 14px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+}
+
+.error {
+    color: var(--color-error);
+}
+
+#trails {
     display: flex;
     flex-direction: row;
     gap: var(--spacing-large);
     flex-wrap: wrap;
-    margin-top: 14px;
+    justify-content: center;
+}
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal {
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
+    background-color: var(--background-color-light);
+    padding: var(--spacing-large);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 90%;
+    max-width: 500px;
 }
-
 .modalContent {
     background-color: #fefefe;
     margin: auto;
@@ -183,5 +209,43 @@ div.trailsList {
     height: 100%;
     background-color: #00000080;
     overflow: auto;
+
+.modalHeader {
+    margin-bottom: var(--spacing-medium);
+}
+
+.radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-large);
+}
+
+@media (max-width: 768px) {
+    .trailsList {
+        align-items: center;
+    }
+
+    #trails {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .modal {
+        width: 95%;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
 }
 </style>

@@ -13,25 +13,31 @@ const props = defineProps({
             <BaseTag :tag="info.difficulte"></BaseTag>
             <p>{{ info.nbr_posts }} postes</p>
         </div>
-        
     </div>
 </template>
 
 <style scoped>
- div.card{
+.card {
     border: var(--color-secondary) var(--border-width-medium) solid;
     border-radius: var(--border-radius);
     padding: var(--spacing-medium);
-    width: 20%;
- }
+    width: 100%;
+    max-width: 300px;
+    box-shadow: var(--box-shadow);
+    transition: transform var(--default-transition);
+}
 
- p.nom{
-     font-size: 1.5rem;
-     color: var(--color-primary);
-     margin: var(--spacing-medium) 0px;
- }
+.card:hover {
+    transform: translateY(-5px);
+}
 
-div.details{
+.nom {
+    font-size: 1.5rem;
+    color: var(--color-tertiary);
+    margin: var(--spacing-medium) 0;
+}
+
+.details {
     display: flex;
     flex-direction: row;
     align-items: center;

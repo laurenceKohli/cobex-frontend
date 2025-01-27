@@ -59,8 +59,8 @@ function handleMouseUp() {
 
 function drawPoint(geoloc, active) {
     if (!ctx.value) return;
-    const x = Math.abs(long1 - geoloc.long)*40000;
-    const y = Math.abs(lat1 - geoloc.lat)*61500;
+    const x = Math.abs(long1 - geoloc.long) * 40000;
+    const y = Math.abs(lat1 - geoloc.lat) * 61500;
     ctx.value.drawImage(pointImage, x, y, 30, 30);
 }
 
@@ -118,6 +118,10 @@ onMounted(() => {
 <style scoped>
 #map {
     position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: fit-content;
 }
 
 .zoom-controls {
@@ -140,14 +144,10 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--box-shadow);
 }
 
 .zoom-btn:hover {
     background: #f0f0f0;
-}
-
-canvas {
-    touch-action: none;
-    user-select: none;
 }
 </style>

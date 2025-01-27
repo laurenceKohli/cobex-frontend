@@ -20,9 +20,12 @@ const props = defineProps({
     display: inline-flex;
     justify-content: center;
     align-items: center;
-
     padding: 0.2rem 0.8rem;
     border-radius: 0.35rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: #fff;
+    text-transform: capitalize;
 }
 
 .facile {

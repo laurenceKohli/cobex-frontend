@@ -1,5 +1,4 @@
 <script setup>
-
 import AppTabList from './AppTabList.vue';
 import BaseMap from './BaseMap.vue';
 import BaseButton from './BaseButton.vue';
@@ -32,7 +31,6 @@ watch(page, () => {
                 pageLimit.value = data.value.resultatsAct.length;
             }
     });
-                    
 });
 
 const nombreDePages = computed(() => {
@@ -45,23 +43,23 @@ watch(data, (val) => {
 });
 
 const start = () => {
-    window.location.href='#parcours-actif';
+    window.location.href = '#parcours-actif';
 }
 
 setTimeout(() => {
     page.value = 1;
-    console.log(loading.value);
 }, 1);
-
 </script>
 
 <template>
     <div v-if="error" class="error"><h1>Erreur lors du chargement des résultats</h1></div>
     <div id="parcours" v-if="data">
         <h1>{{ data.nom }}</h1>
-        <BaseTag :tag="data.difficulte"></BaseTag>
+        <div id="details">
+            <BaseTag :tag="data.difficulte"></BaseTag>
+            <p>Nombre de postes : {{ nbPostesTotal }}</p>
+        </div>
         <p v-if="data.descr">{{ data.descr }}</p>
-        <p>Nombre de postes : {{ nbPostesTotal }}</p>
         <BaseButton @click="start">
             Débuter le parcours
         </BaseButton>
@@ -90,13 +88,48 @@ setTimeout(() => {
 </template>
 
 <style scoped>
-    .error {
-        color: red;
+.error {
+        color: var(--color-error);
+ }
+#parcours {
+    padding: var(--spacing-large);
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+#details {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-medium);
+    text-align: center;
+}
+
+.page-nav {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: var(--spacing-large) 0;
+}
+
+h1 {
+    margin-bottom: var(--spacing-medium);
+}
+
+p {
+    margin-bottom: var(--spacing-small);
+}
+
+@media (max-width: 768px) {
+    #parcours {
+        padding: var(--spacing-medium);
+        padding-bottom: var(--spacing-large);
     }
 
     .page-nav {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
+        flex-direction: column;
+        gap: var(--spacing-small);
     }
+}
 </style>

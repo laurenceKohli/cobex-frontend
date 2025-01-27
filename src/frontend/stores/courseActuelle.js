@@ -59,12 +59,8 @@ function convertTimeToSeconds(time) {
 
 export function saveResult() {
   const resultatCrud = useFetchApiCrud('resultats', import.meta.env.VITE_API_URL);
-  console.log('Enregistrement du résultat');
-  console.log(username.value);
   const formData = {temps: endTimer.value, trailID: currentTrail.value};
-  console.log('Donnees :', formData);
   const {data, error, loading} = resultatCrud.create(formData);
-  console.log('Data :', data);
   watch(data, () => {
     parcoursSaved.value = true;
     resultats.value.push({

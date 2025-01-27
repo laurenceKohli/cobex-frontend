@@ -6,29 +6,29 @@
   }
   
   h1 {
-    font-size: 4rem;
-    color : var(--color-primary);
+    font-size: var(--font-size-xlarge);
+    color: var(--color-primary);
   }
   
   h2 {
-    font-size: 3.5rem;
+    font-size: var(--font-size-large);
     color: var(--color-secondary);
   }
   
   h3 {
-    font-size: 3rem;
+    font-size: var(--font-size-large);
   }
   
   h4 {
-    font-size: 2.5rem;
+    font-size: var(--font-size-medium);
   }
   
   h5 {
-    font-size: 2rem;
+    font-size: var(--font-size-medium);
   }
   
   h6 {
-    font-size: 1.5rem;
+    font-size: var(--font-size-small);
   }
   
   p, ol, li, a{
@@ -43,4 +43,14 @@
 
   a {
     text-decoration: none;
+}
+
+@media (max-width: var(--breakpoint-medium)) {
+    h1 {
+        font-size: var(--font-size-large);
+    }
+
+    h2 {
+        font-size: var(--font-size-medium);
+    }
 }
