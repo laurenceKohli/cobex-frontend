@@ -22,9 +22,6 @@ const buttonText = computed(() => {
 });
 
 const handleClick = async () => {
-  console.log(depart.value);
-  console.log(nbPostesParcourus.value);
-  console.log(nbPostesTotal.value);
   const imageData = toggleCamera();
  
   if (imageData) {

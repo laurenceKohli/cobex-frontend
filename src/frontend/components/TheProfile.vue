@@ -108,7 +108,6 @@ function submitLogin(event) {
 }
 
 const handleClose = () => {
-  console.log('closing modal');
   finParcours.value = false;
 }
 

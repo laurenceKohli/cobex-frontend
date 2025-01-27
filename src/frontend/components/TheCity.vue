@@ -72,24 +72,27 @@ const showLoadingModal = computed(() => loading.value);
 </script>
 
 <template>
-    <div v-if="error" class="error"><h1>Erreur lors du chargement des parcours</h1></div>
+    <div v-if="error" class="error">
+        <h1>Erreur lors du chargement des parcours</h1>
+    </div>
     <div v-else>
         <div class="city">
             <h1>{{ nomVille }}</h1>
         </div>
-        <div v-if="ville=='yverdon'" class="trailsList">
-            <BaseButton @click="toggleSortDifficulty" class="secondary">
-                Trier par difficulté {{ sorted === "asc" ? "▴" : "▾" }}
-            </BaseButton>
-            <BaseButton @click="showModal" class="secondary">
-                Filtrer
-            </BaseButton>
-            <template v-for="parcours in sortedParcours">
-                    <BaseCard
-                        :info="parcours"
-                        @click="link = {id : parcours.id, nom : parcours.nom}"
-                    ></BaseCard>
-            </template>
+        <div v-if="ville == 'yverdon'" class="trailsList">
+            <div class="buttons">
+                <BaseButton @click="toggleSortDifficulty" class="secondary">
+                    Trier par difficulté {{ sorted === "asc" ? "▴" : "▾" }}
+                </BaseButton>
+                <BaseButton @click="showModal" class="secondary">
+                    Filtrer
+                </BaseButton>
+            </div>
+            <div id="trails">
+                <template v-for="parcours in sortedParcours">
+                    <BaseCard :info="parcours" @click="link = { id: parcours.id, nom: parcours.nom }"></BaseCard>
+                </template>
+            </div>
         </div>
         <div v-else>
             <p>Cette ville n'a pas encore de parcours.</p>
@@ -118,11 +121,13 @@ const showLoadingModal = computed(() => loading.value);
                                     Moyen
                                 </label>
                                 <label>
-                                    <input type="radio" name="difficulty" value="difficile" v-model="filterDifficulty" />
+                                    <input type="radio" name="difficulty" value="difficile"
+                                        v-model="filterDifficulty" />
                                     Difficile
                                 </label>
                                 <label>
-                                    <input type="radio" name="difficulty" value="très difficile" v-model="filterDifficulty" />
+                                    <input type="radio" name="difficulty" value="très difficile"
+                                        v-model="filterDifficulty" />
                                     Très difficile
                                 </label>
                             </div>
@@ -136,7 +141,7 @@ const showLoadingModal = computed(() => loading.value);
             </div>
         </div>
     </div>
-    <SimpleModal :modalContent="'Parcours en chargement...'" :modalCondition="showLoadingModal"/>
+    <SimpleModal :modalContent="'Parcours en chargement...'" :modalCondition="showLoadingModal" />
 </template>
 
 <style scoped>
@@ -191,24 +196,6 @@ const showLoadingModal = computed(() => loading.value);
     width: 90%;
     max-width: 500px;
 }
-.modalContent {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.modalBackdrop {
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #00000080;
-    overflow: auto;
 
 .modalHeader {
     margin-bottom: var(--spacing-medium);
@@ -238,14 +225,6 @@ const showLoadingModal = computed(() => loading.value);
 
     .modal {
         width: 95%;
-    position: fixed;
-    z-index: 1;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-}
+    }
 }
 </style>
