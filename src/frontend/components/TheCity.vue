@@ -2,9 +2,11 @@
 import { useFetchApiCrud } from '../composables/useFetchApiCrud';
 import BaseCard from './BaseCard.vue';
 import BaseButton from './BaseButton.vue';
-import { computed, ref, watch } from 'vue';
-import { currentTrail } from '../stores/utils';
+import { compile, computed, ref, watch } from 'vue';
+import { currentTrail, currentTrailName } from '../stores/utils';
+import { finParcours } from '../stores/courseActuelle';
 import { difficultySort } from '../composables/difficultySort';
+import SimpleModal from './SimpleModal.vue';
 
 const filterDifficulty = ref('tout');
 const showFilterModal = ref(false);
@@ -30,9 +32,9 @@ switch (ville) {
         break;
 }
 
-//si link change alors on va sur la page du parcours
 watch(link, (newValue) => {
-    currentTrail.value = newValue;
+    currentTrail.value = newValue.id;
+    currentTrailName.value = newValue.nom;
     window.location.href = `#parcours-detail`;
 });
 
@@ -65,64 +67,65 @@ const sortedParcours = computed(() => {
         return parcoursFiltres.value?.toSorted((a, b) => -difficultySort(a, b));
     }
 });
+
+const showLoadingModal = computed(() => loading.value);
 </script>
 
 <template>
-    <div class="city">
-        <h1>{{ nomVille }}</h1>
-    </div>
-    <div v-if="ville=='yverdon'" class="trailsList">
-        <div class="buttons">
+    <div v-if="error" class="error"><h1>Erreur lors du chargement des parcours</h1></div>
+    <div v-else>
+        <div class="city">
+            <h1>{{ nomVille }}</h1>
+        </div>
+        <div v-if="ville=='yverdon'" class="trailsList">
             <BaseButton @click="toggleSortDifficulty" class="secondary">
-                Trier par difficulté
+                Trier par difficulté {{ sorted === "asc" ? "▴" : "▾" }}
             </BaseButton>
             <BaseButton @click="showModal" class="secondary">
                 Filtrer
             </BaseButton>
-        </div>
-        <div id="trails">
             <template v-for="parcours in sortedParcours">
-                <BaseCard
-                    :info="parcours"
-                    @click="link = parcours.id"
-                ></BaseCard>
+                    <BaseCard
+                        :info="parcours"
+                        @click="link = {id : parcours.id, nom : parcours.nom}"
+                    ></BaseCard>
             </template>
         </div>
-    </div>
-    <div v-else>
-        <p>Cette ville n'a pas encore de parcours.</p>
-    </div>
+        <div v-else>
+            <p>Cette ville n'a pas encore de parcours.</p>
+        </div>
 
-    <div v-if="showFilterModal" class="modalBackdrop" @click="closeModal">
-        <div class="modal" @click.stop>
-            <div class="modalContent">
-                <div class="modalHeader">
-                    <h3>Filtrer par</h3>
-                </div>
-                <div>
+        <div v-if="showFilterModal" class="modalBackdrop" @click="closeModal">
+            <div class="modal" @click.stop>
+                <div class="modalContent">
+                    <div class="modalHeader">
+                        <h3>Filtrer par</h3>
+                    </div>
                     <div>
-                        <h4><strong>Difficulté</strong></h4>
-                        <div class="radioGroup">
-                            <label>
-                                <input type="radio" name="difficulty" value="tout" v-model="filterDifficulty" />
-                                Tout
-                            </label>
-                            <label>
-                                <input type="radio" name="difficulty" value="facile" v-model="filterDifficulty" />
-                                Facile
-                            </label>
-                            <label>
-                                <input type="radio" name="difficulty" value="moyen" v-model="filterDifficulty" />
-                                Moyen
-                            </label>
-                            <label>
-                                <input type="radio" name="difficulty" value="difficile" v-model="filterDifficulty" />
-                                Difficile
-                            </label>
-                            <label>
-                                <input type="radio" name="difficulty" value="très difficile" v-model="filterDifficulty" />
-                                Très difficile
-                            </label>
+                        <div>
+                            <h4><strong>Difficulté</strong></h4>
+                            <div class="radioGroup">
+                                <label>
+                                    <input type="radio" name="difficulty" value="tout" v-model="filterDifficulty" />
+                                    Tout
+                                </label>
+                                <label>
+                                    <input type="radio" name="difficulty" value="facile" v-model="filterDifficulty" />
+                                    Facile
+                                </label>
+                                <label>
+                                    <input type="radio" name="difficulty" value="moyen" v-model="filterDifficulty" />
+                                    Moyen
+                                </label>
+                                <label>
+                                    <input type="radio" name="difficulty" value="difficile" v-model="filterDifficulty" />
+                                    Difficile
+                                </label>
+                                <label>
+                                    <input type="radio" name="difficulty" value="très difficile" v-model="filterDifficulty" />
+                                    Très difficile
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,6 +136,7 @@ const sortedParcours = computed(() => {
             </div>
         </div>
     </div>
+    <SimpleModal :modalContent="'Parcours en chargement...'" :modalCondition="showLoadingModal"/>
 </template>
 
 <style scoped>
@@ -153,6 +157,10 @@ const sortedParcours = computed(() => {
     justify-content: center;
     gap: var(--spacing-medium);
     margin-bottom: var(--spacing-large);
+}
+
+.error {
+    color: var(--color-error);
 }
 
 #trails {
@@ -183,6 +191,24 @@ const sortedParcours = computed(() => {
     width: 90%;
     max-width: 500px;
 }
+.modalContent {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.modalBackdrop {
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000080;
+    overflow: auto;
 
 .modalHeader {
     margin-bottom: var(--spacing-medium);
@@ -212,6 +238,14 @@ const sortedParcours = computed(() => {
 
     .modal {
         width: 95%;
-    }
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
 }
 </style>

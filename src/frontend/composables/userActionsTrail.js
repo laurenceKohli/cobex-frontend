@@ -1,5 +1,5 @@
 import readQR from "./readQR";
-import { depart, nbPostesParcourus, stopTimer, endTimer, nbPostesTotal, saveResult } from '../stores/courseActuelle';
+import { depart, nbPostesParcourus, stopTimer, endTimer, nbPostesTotal, saveResult, finParcours, parcoursSaved, failedSave } from '../stores/courseActuelle';
 import { position } from '../composables/useUserPosition';
 import { isAuth, addHookLogin } from '../stores/user';
 
@@ -26,8 +26,11 @@ export function scan () {
         nbPostesParcourus.value++;
     } else {
         stopTimer();
+        nbPostesParcourus.value = 0;
+        finParcours.value = true;
         depart.value = false;
         if(isAuth.value){
+            finParcours.value = false;
             saveResult();
         } else {
             addHookLogin(saveResult);
@@ -36,9 +39,16 @@ export function scan () {
     }
 }
 
+const closeActiveModal = () => {
+    parcoursSaved.value = false;
+    failedSave.value = false;
+};
+
 export function quitTrail(){
+    closeActiveModal();
     stopTimer();
     depart.value = false;
+    nbPostesParcourus.value = 0;
     window.location.href='#';
 }
 
@@ -53,3 +63,4 @@ export function calculateDistance(src, dest) {
     const angle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return angle * 6371000;
 }
+

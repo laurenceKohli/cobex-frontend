@@ -1,9 +1,12 @@
 <script setup>
-import { useFetchApiCrud } from '../composables/useFetchApiCrud';
-import { ref, watch } from 'vue';
-import { isAuth, username, userId, doHookLogin } from '../stores/user';
-import { setDefaultHeaders } from '../composables/useFetchApi';
 
+import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
+import { computed, ref, watch } from 'vue';
+import { isAuth, username, userId, doHookLogin, resultats } from '../stores/user';
+import { setDefaultHeaders } from '../composables/useFetchApi';
+import { finParcours } from '../stores/courseActuelle';
+
+import SimpleModal from './SimpleModal.vue';
 import AppTabList from './AppTabList.vue';
 import BaseInput from './BaseInput.vue';
 import BaseInputLabel from './BaseInputLabel.vue';
@@ -21,14 +24,19 @@ const usernameExists = ref(false);
 const invalidEmail = ref(false);
 const emailExists = ref(false);
 
-const resultData = ref([]);
+const connRef = ref(false);
+const unexpResp = ref(false);
+const globalLoading = ref(false);
 
 function fetchResults() {
-  const { data, error } = resultCrud.fetchApiToRef({ url: `resultats?utilisateurs=${userId.value}`, method: 'GET' });
+  const {data, error, loading} = resultCrud.fetchApiToRef({url: `resultats?utilisateurs=${userId.value}`, method: 'GET'});
+  globalLoading.value = loading.value;
   watch(data, () => {
-    resultData.value = data.value;
+    globalLoading.value = loading.value;
+    resultats.value = data.value;
   });
   watch(error, () => {
+    globalLoading.value = loading.value;
     console.error('Error while fetching results', error.value);
   });
 }
@@ -43,9 +51,11 @@ function submitCreate(event) {
   emailExists.value = false;
   invalidEmail.value = false;
 
-  const formData = { nom: name.value, mdp: password.value, mail: email.value };
-  const { data, error } = peopleCrud.create(formData);
+  const formData = {nom: name.value, mdp: password.value, mail: email.value};
+  const {data, error, loading} = peopleCrud.create(formData);
+  globalLoading.value = loading.value;
   watch(data, () => {
+    globalLoading.value = loading.value;
     const jwt = data.value.token;
     if (!jwt) {
       console.error('No token in response');
@@ -58,51 +68,61 @@ function submitCreate(event) {
     doHookLogin();
   });
   watch(error, () => {
+    globalLoading.value = loading.value;
+    usernameExists.value = error.value.data.msg.includes('§§usernameExists§§');
+    emailExists.value = error.value.data.msg.includes('§§emailExists§§');
+    invalidEmail.value = error.value.data.msg.includes('§§invalidEmail§§');
+    
     console.error('Error while creating account', error.value);
-
-    usernameExists.value = error.value.data.msg.includes('§§usernameExists§§')
-    emailExists.value = error.value.data.msg.includes('§§emailExists§§')
-    invalidEmail.value = error.value.data.msg.includes('§§invalidEmail§§')
-
-    console.error('Error while logging in', error.value);
   });
 }
 
 function submitLogin(event) {
   event.preventDefault();
-  const formData = { nom: name.value, mdp: password.value };
-  const { data, error } = peopleCrud.fetchApiToRef({ url: 'utilisateurs/login', method: 'POST', data: formData });
+  const formData = {nom: name.value, mdp: password.value};
+  const {data, error, loading} = peopleCrud.fetchApiToRef({url: 'utilisateurs/login', method: 'POST', data: formData});
+  globalLoading.value = loading.value;
   watch(data, () => {
+    globalLoading.value = loading.value;  
     const jwt = data.value.token;
     if (!jwt) {
-      console.error('No token in response');
+      console.error('Unexpected response', data.value);
+      unexpResp.value = true;
       return;
     }
-
-    setDefaultHeaders({ Authorization: 'Bearer ' + jwt });
+    //else
+    setDefaultHeaders({Authorization: 'Bearer ' + jwt});
     isAuth.value = true;
+    connRef.value = false;
+    unexpResp.value = false;
     username.value = data.value.utilisateur.nom;
     userId.value = data.value.utilisateur.id;
     fetchResults();
     doHookLogin();
   });
   watch(error, () => {
+    globalLoading.value = loading.value;  
     console.error('Error while logging in', error.value);
+    connRef.value = true;
   });
 }
 
-if (isAuth.value) {
-  fetchResults();
+const handleClose = () => {
+  console.log('closing modal');
+  finParcours.value = false;
 }
+
+const showLoadingModal = computed(() => globalLoading.value);
 </script>
 
 <template>
   <div class="profile-container" v-if="isAuth">
     <p>Bonjour {{ username }}</p>
     <h2>Résultats effectués</h2>
-    <template v-if="resultData.length > 0">
-      <AppTabList :tab="resultData"></AppTabList>
+    <template v-if="resultats.length > 0">
+      <AppTabList :tab="resultats"></AppTabList>
     </template>
+    <p v-else>Vous n'avez pas encore effectué de parcours</p>
   </div>
 
   <form class="auth-form" v-else-if="create" @submit="submitCreate" method="post">
@@ -140,11 +160,16 @@ if (isAuth.value) {
       <BaseInputLabel for="password">Mot de passe</BaseInputLabel>
       <BaseInput type="text" name="mdp" id="password" v-model="password" />
     </div>
+    <BaseInputError v-if="connRef" message="Identifiants incorrects"/>
+    <BaseInputError v-if="unexpResp" message="Réponse non conforme reçue. Veuillez contacter le support informatique."/>
     <div class="choix">
       <BaseButton type="submit">Se connecter</BaseButton>
       <a @click="toggleCreate">Je n'ai pas de compte</a>
     </div>
   </form>
+
+  <SimpleModal :modalContent="'Résultats en chargement...'" :modalCondition="showLoadingModal"/>
+  <SimpleModal :modalContent="'Veuillez vous connecter pour enregistrer le parcours'" :modalCondition="finParcours" :modalCloser="true" @close="handleClose"/>
 </template>
 
 <style scoped>

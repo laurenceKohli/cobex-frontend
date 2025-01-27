@@ -3,10 +3,11 @@ import AppTabList from './AppTabList.vue';
 import BaseMap from './BaseMap.vue';
 import BaseButton from './BaseButton.vue';
 import BaseTag from './BaseTag.vue';
-import { useFetchApiCrud } from '../composables/useFetchApiCrud';
+import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { currentTrail } from '../stores/utils';
 import { nbPostesTotal, postesActifs } from '../stores/courseActuelle';
 import { computed, ref, watch } from 'vue';
+import SimpleModal from './SimpleModal.vue';
 
 const id = currentTrail.value;
 const page = ref(0);
@@ -17,15 +18,18 @@ const error = ref(false);
 const loading = ref(true);
 const data = ref(null);
 
+const showLoadingModal = computed(() => loading.value);
+
 watch(page, () => {
-    const { data: d, error: e, loading: l } = parcoursCrud.read(id + '?include="postes"&page=' + page.value);
+    loading.value = true;
+    const {data: d, error: e, loading: l} = parcoursCrud.read(id+'?include="postes"&page='+page.value);
     watch([d, e, l], () => {
         error.value = e.value;
         loading.value = l.value;
         data.value = d.value;
         if (pageLimit.value === 0 && data.value.resultatsAct.length !== 0 && page.value === 1) {
-            pageLimit.value = data.value.resultatsAct.length;
-        }
+                pageLimit.value = data.value.resultatsAct.length;
+            }
     });
 });
 
@@ -48,9 +52,8 @@ setTimeout(() => {
 </script>
 
 <template>
-    <div v-if="error">{{ error }}</div>
-    <div v-if="loading">...</div>
-    <div id="parcours" v-else>
+    <div v-if="error" class="error"><h1>Erreur lors du chargement des résultats</h1></div>
+    <div id="parcours" v-if="data">
         <h1>{{ data.nom }}</h1>
         <div id="details">
             <BaseTag :tag="data.difficulte"></BaseTag>
@@ -60,8 +63,9 @@ setTimeout(() => {
         <BaseButton @click="start">
             Débuter le parcours
         </BaseButton>
-        <template v-if="data.resultatsAct.length > 0">
-            <AppTabList :tab="data.resultatsAct" :pageData="{ page, pageLimit }"></AppTabList>
+
+        <template v-if="data.resultatsAct?.length > 0">
+            <AppTabList :tab="data.resultatsAct" :pageData="{ page, pageLimit }"/>
             <div class="page-nav" v-if="nombreDePages > 1">
                 <BaseButton class="secondary" v-if="page > 1" @click="page--">Précédent</BaseButton>
                 <div v-if="page == 1"></div>
@@ -75,9 +79,18 @@ setTimeout(() => {
         </template>
         <BaseMap :points="postesActifs"></BaseMap>
     </div>
+
+    <SimpleModal
+        :modalContent="'Résultats en chargement...'"
+        :modalCondition="showLoadingModal">
+    </SimpleModal>
+
 </template>
 
 <style scoped>
+.error {
+        color: var(--color-error);
+ }
 #parcours {
     padding: var(--spacing-large);
     max-width: 800px;

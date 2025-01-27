@@ -12,7 +12,8 @@ const props = defineProps({
 
 let link = ref([]);
 watch(link, (newValue) => {
-        currentTrail.value = newValue;
+        currentTrail.value = newValue.id;
+        currentTrailName.value = newValue.nom;
         window.location.href = `#parcours-detail`;
     });
 </script>
@@ -21,7 +22,7 @@ watch(link, (newValue) => {
     <div class="ligne">
         <p class="numero" v-if="numero">{{ numero }}</p>
         <p class="nom" v-if="info.user">{{ info.user }}</p>
-        <p class="nom" v-if="info.parcours?.nom" @click="link = info.parcours.id">{{ info.parcours.nom }}</p>
+        <p class="nom" v-if="info.parcours?.nom" @click="link = {id : info.parcours.id, nom : info.parcours.nom}">{{ info.parcours.nom }}</p>
         <p class="temps" v-if="info.temps">{{ info.temps }}</p>
     </div>
 </template>

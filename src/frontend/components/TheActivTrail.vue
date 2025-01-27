@@ -2,10 +2,12 @@
 import AppNavTrail from './AppNavTrail.vue';
 import BaseMap from './BaseMap.vue';
 import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
-import { currentTrail } from '../stores/utils';
-import { depart, nbPostesParcourus, nbPostesTotal, postesActifs } from '../stores/courseActuelle';
-import { computed, onMounted, ref, nextTick } from 'vue';
+import { computed, onMounted, ref, nextTick, watch } from 'vue';
+
+import { currentTrail, currentTrailName } from '../stores/utils';
+import { depart, nbPostesParcourus, nbPostesTotal, postesActifs, parcoursSaved, failedSave } from '../stores/courseActuelle';
 import BaseButton from './BaseButton.vue';
+import SimpleModal from './SimpleModal.vue';
 
 import { startup, isVideoActive, toggleCamera, startVideo, stopVideo } from '../composables/useUserMedia';
 import { getPosition, position } from '../composables/useUserPosition';
@@ -20,6 +22,9 @@ const buttonText = computed(() => {
 });
 
 const handleClick = async () => {
+  console.log(depart.value);
+  console.log(nbPostesParcourus.value);
+  console.log(nbPostesTotal.value);
   const imageData = toggleCamera();
  
   if (imageData) {
@@ -33,6 +38,12 @@ const videoRef = ref(null);
 const canvasRef = ref(null);
 
 const showCamera = ref(false);
+
+//ferme n'importe quelle modale ouverte (les deux modales sont incompatibles)
+const handleClose = () => {
+  parcoursSaved.value = false;
+  failedSave.value = false;
+};
 
 const showCameraItem = async () => {
   showCamera.value = !showCamera.value;
@@ -84,6 +95,8 @@ const showCameraItem = async () => {
         <BaseButton @click="showCameraItem" icon="qr_code_scanner">Scanner QR Code</BaseButton>
     </template> 
     <AppNavTrail/>
+    <SimpleModal :modalContent="'Parcours sauvegardé avec succès.'" :modalCondition="parcoursSaved" :modalCloser="true" @close="handleClose"/>
+    <SimpleModal :modalContent="'Échec de la sauvegarde du parcours'" :modalCondition="failedSave" :modalCloser="true" @close="handleClose"/>
 </template>
 
 <style scoped>
