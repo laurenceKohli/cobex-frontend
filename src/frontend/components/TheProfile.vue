@@ -4,7 +4,7 @@ import {  useFetchApiCrud } from '../composables/useFetchApiCrud';
 import { computed, ref, watch } from 'vue';
 import { isAuth, username, userId, doHookLogin, resultats } from '../stores/user';
 import { setDefaultHeaders } from '../composables/useFetchApi';
-import { finParcours } from '../stores/courseActuelle';
+import { finParcours, parcoursSaved, failedSave } from '../stores/courseActuelle';
 
 import SimpleModal from './SimpleModal.vue';
 import AppTabList from './AppTabList.vue';
@@ -109,6 +109,8 @@ function submitLogin(event) {
 
 const handleClose = () => {
   finParcours.value = false;
+  parcoursSaved.value = false;
+  failedSave.value = false;
 }
 
 const showLoadingModal = computed(() => globalLoading.value);
@@ -168,7 +170,10 @@ const showLoadingModal = computed(() => globalLoading.value);
   </form>
 
   <SimpleModal :modalContent="'Résultats en chargement...'" :modalCondition="showLoadingModal"/>
+
   <SimpleModal :modalContent="'Veuillez vous connecter pour enregistrer le parcours'" :modalCondition="finParcours" :modalCloser="true" @close="handleClose"/>
+  <SimpleModal :modalContent="'Parcours sauvegardé avec succès.'" :modalCondition="parcoursSaved" :modalCloser="true" @close="handleClose"/>
+  <SimpleModal :modalContent="'Échec de la sauvegarde du parcours'" :modalCondition="failedSave" :modalCloser="true" @close="handleClose"/>
 </template>
 
 <style scoped>
