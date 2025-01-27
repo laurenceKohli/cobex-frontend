@@ -24,13 +24,14 @@ Pour installer et démarrer le projet, suivez les étapes ci-dessous :
     ```bash
     cd cobex-frontend
     ```
+3. Copier le fichier d'environnement et changer les valeurs si nécessaire
 
-3. Installez les dépendances :
+4. Installez les dépendances :
     ```bash
     npm install
     ```
 
-4. Démarrez le serveur de développement :
+5. Démarrez le serveur de développement :
     ```bash
     npm run dev
     ```
